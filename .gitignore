@@ -1,4 +1,22 @@
-CLAUDE.md
+venv/
+
+.env
+
+data/uploads/
+data/knowledge/
+data/btp.db
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS files
+.DS_Store
+Thumbs.db
+
 GUIDE.md
+CLAUDE.md
 Systeme-IA-BTP.pdf
 .vscode/
