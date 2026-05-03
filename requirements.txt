@@ -1,0 +1,13 @@
+flask
+python-dotenv
+langchain
+langchain-community
+sentence-transformers
+pinecone-client
+openai
+pymupdf
+python-docx
+pandas
+openpyxl
+pytesseract
+pillow
