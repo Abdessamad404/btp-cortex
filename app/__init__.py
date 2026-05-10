@@ -11,4 +11,9 @@ def create_app():
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     os.makedirs("data", exist_ok=True)
 
+    # Initialize the database
+    from app.database import init_db
+
+    init_db()
+
     return app
