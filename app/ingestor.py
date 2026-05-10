@@ -1,6 +1,6 @@
 import hashlib
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from app.extractors import extract_text
 from app.database import get_connection
 from config import UPLOAD_FOLDER
@@ -72,6 +72,6 @@ def ingest(
             "auteur": auteur,
             "criticite": criticite,
             "type_document": type_document or file_type,
-            "ingested_at": datetime.utcnow().isoformat(),
+            "ingested_at": datetime.now(timezone.utc).isoformat(),
         },
     }
