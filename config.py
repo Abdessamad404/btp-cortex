@@ -12,7 +12,7 @@ EMBED_MODEL = os.getenv("EMBED_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "dev")
 
 CHUNK_SIZE = 500
-CHUNK_OVERLAP = 50
+CHUNK_OVERLAP = 100
 TOP_K = 5
 UPLOAD_FOLDER = "data/uploads"
 DB_PATH = "data/btp.db"

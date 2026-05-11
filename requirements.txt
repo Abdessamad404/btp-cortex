@@ -3,7 +3,7 @@ python-dotenv
 langchain
 langchain-community
 sentence-transformers
-pinecone-client
+pinecone
 openai
 pymupdf
 python-docx
