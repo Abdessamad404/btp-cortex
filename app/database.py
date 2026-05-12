@@ -24,9 +24,21 @@ def init_db():
             auteur        TEXT,
             criticite     TEXT,
             type_document TEXT,
+            chunk_count   INTEGER DEFAULT 0,
             uploaded_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             status        TEXT DEFAULT 'pending'
         )
     """)
+    conn.commit()
+    conn.close()
+
+
+def update_chunk_count(file_hash: str, count: int):
+    """Update chunk_count for a document after chunking is done."""
+    conn = get_connection()
+    conn.execute(
+        "UPDATE documents SET chunk_count = ?, status = 'processed' WHERE file_hash = ?",
+        (count, file_hash),
+    )
     conn.commit()
     conn.close()

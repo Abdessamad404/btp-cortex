@@ -4,6 +4,7 @@ from app.chunker import chunk
 from app.embedder import embed
 from app.vector_store import upsert
 from config import UPLOAD_FOLDER
+from app.database import update_chunk_count
 import os
 
 upload_bp = Blueprint("upload", __name__)
@@ -54,6 +55,9 @@ def upload():
         chunks = chunk(result["text"])
         embeddings = embed(chunks)
         upsert(chunks, embeddings, result["meta"])
+
+        # Update chunk count in SQLite
+        update_chunk_count(result["file_hash"], len(chunks))
 
         flash(f"✅ {file.filename} ingéré avec succès — {len(chunks)} chunks indexés.")
         return redirect(url_for("upload.upload"))

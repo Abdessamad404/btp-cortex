@@ -1,6 +1,6 @@
 import hashlib
 import os
-from datetime import datetime, timezone
+from datetime import datetime
 from app.extractors import extract_text
 from app.database import get_connection
 from config import UPLOAD_FOLDER
@@ -64,6 +64,7 @@ def ingest(
     return {
         "status": "success",
         "text": text,
+        "file_hash": file_hash,
         "meta": {
             "filename": filename,
             "file_type": file_type,
