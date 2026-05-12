@@ -16,4 +16,13 @@ def create_app():
 
     init_db()
 
+    # Register blueprints
+    from app.routes.upload import upload_bp
+    from app.routes.chat import chat_bp
+    from app.routes.documents import docs_bp
+
+    app.register_blueprint(upload_bp)
+    app.register_blueprint(chat_bp)
+    app.register_blueprint(docs_bp)
+
     return app
