@@ -107,26 +107,29 @@
     document.getElementById("question2").focus();
   }
 
-  function appendMessage(role, text) {
+function appendMessage(role, text) {
     const isUser = role === "user";
     const div = document.createElement("div");
-    div.className = `flex gap-3 items-start ${isUser ? "flex-row-reverse" : ""}`;
+    div.style.cssText = `display:flex; gap:12px; align-items:flex-start; width:100%; ${isUser ? 'flex-direction:row-reverse;' : ''}`;
     div.innerHTML = `
       <div style="width:32px; height:32px; background:#292524; border:0.5px solid #44403C;
                   border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
         <i data-lucide="${isUser ? 'user' : 'bot'}" style="width:16px; height:16px; color:${isUser ? '#A8A29E' : '#F97316'};"></i>
       </div>
-      <div style="background:${isUser ? '#1C1917' : '#292524'}; color:#F5F5F4; max-width:75%;
-                  border:0.5px solid #44403C; border-radius:12px;
-                  ${isUser ? 'border-top-right-radius:2px' : 'border-top-left-radius:2px'};
-                  padding:12px 16px; font-size:14px; line-height:1.6; white-space:pre-wrap;">
+      <div style="background:${isUser ? '#F97316' : '#292524'};
+                  color:${isUser ? '#1C1917' : '#F5F5F4'};
+                  border:0.5px solid ${isUser ? '#F97316' : '#44403C'};
+                  border-radius:12px;
+                  ${isUser ? 'border-top-right-radius:2px;' : 'border-top-left-radius:2px;'}
+                  padding:10px 14px; font-size:14px; line-height:1.6;
+                  white-space:pre-wrap; word-wrap:break-word;
+                  display:inline-block; max-width:70%;">
         ${text}
       </div>`;
     chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
     lucide.createIcons();
   }
-
   function appendTyping() {
     const uid = "typing-" + Date.now();
     const div = document.createElement("div");
