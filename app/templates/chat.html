@@ -1,75 +1,108 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
-
-<div id="chat-container" class="flex flex-col mx-auto" style="max-width:700px; height:calc(100vh - 80px);">
-
+<div
+  id="chat-container"
+  class="flex flex-col mx-auto"
+  style="max-width: 700px; height: calc(100vh - 80px)"
+>
   <!-- Centered empty state (shown when no messages) -->
-  <div id="empty-state" class="flex flex-col items-center justify-center flex-1 gap-6">
+  <div
+    id="empty-state"
+    class="flex flex-col items-center justify-center flex-1 gap-6"
+  >
     <div class="text-center">
-      <h1 class="text-2xl font-medium mb-2" style="color:#F5F5F4;">Que voulez-vous savoir ?</h1>
-      <p class="text-sm" style="color:#78716C;">Posez une question sur vos documents BTP indexés.</p>
+      <h1 class="text-2xl font-medium mb-2" style="color: #f5f5f4">
+        Que voulez-vous savoir ?
+      </h1>
+      <p class="text-sm" style="color: #78716c">
+        Posez une question sur vos documents BTP indexés.
+      </p>
     </div>
 
     <!-- Input centered -->
-    <div class="rounded-xl flex items-center gap-3 px-4 py-3 w-full"
-         style="background:#292524; border:0.5px solid #44403C;">
-      <input id="question" type="text"
-             placeholder="Ex: Quelle est la résistance du béton pour les fondations ?"
-             class="flex-1 bg-transparent text-sm outline-none"
-             style="color:#F5F5F4;"
-             autocomplete="off">
-      <button id="send-btn"
-              class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
-              style="background:#F97316; color:#1C1917; flex-shrink:0;">
-        <i data-lucide="send" style="width:14px; height:14px;"></i>
+    <div
+      class="rounded-xl flex items-center gap-3 px-4 py-3 w-full"
+      style="background: #292524; border: 0.5px solid #44403c"
+    >
+      <input
+        id="question"
+        type="text"
+        placeholder="Ex: Quelle est la résistance du béton pour les fondations ?"
+        class="flex-1 bg-transparent text-sm outline-none"
+        style="color: #f5f5f4"
+        autocomplete="off"
+      />
+      <button
+        id="send-btn"
+        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+        style="background: #f97316; color: #1c1917; flex-shrink: 0"
+      >
+        <i data-lucide="send" style="width: 14px; height: 14px"></i>
         Envoyer
       </button>
     </div>
   </div>
 
   <!-- Chat view (hidden until first message) -->
-  <div id="chat-view" class="flex-col hidden" style="height:100%;">
-
+  <div id="chat-view" class="flex-col hidden" style="height: 100%">
     <!-- Messages -->
-    <div id="chat-box" class="flex-1 overflow-y-auto flex flex-col gap-4 py-4 pr-1"></div>
+    <div
+      id="chat-box"
+      class="flex-1 overflow-y-auto flex flex-col gap-4 py-4 pr-1"
+    ></div>
 
     <!-- Input at bottom -->
-    <div class="rounded-xl flex items-center gap-3 px-4 py-3 mb-2"
-         style="background:#292524; border:0.5px solid #44403C;">
-      <input id="question2" type="text"
-             placeholder="Continuez la conversation..."
-             class="flex-1 bg-transparent text-sm outline-none"
-             style="color:#F5F5F4;"
-             autocomplete="off">
-      <button id="send-btn2"
-              class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
-              style="background:#F97316; color:#1C1917; flex-shrink:0;">
-        <i data-lucide="send" style="width:14px; height:14px;"></i>
+    <div
+      class="rounded-xl flex items-center gap-3 px-4 py-3 mb-2"
+      style="background: #292524; border: 0.5px solid #44403c"
+    >
+      <input
+        id="question2"
+        type="text"
+        placeholder="Continuez la conversation..."
+        class="flex-1 bg-transparent text-sm outline-none"
+        style="color: #f5f5f4"
+        autocomplete="off"
+      />
+      <button
+        id="send-btn2"
+        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+        style="background: #f97316; color: #1c1917; flex-shrink: 0"
+      >
+        <i data-lucide="send" style="width: 14px; height: 14px"></i>
         Envoyer
       </button>
     </div>
   </div>
-
 </div>
 
 <script>
   const emptyState = document.getElementById("empty-state");
-  const chatView   = document.getElementById("chat-view");
-  const chatBox    = document.getElementById("chat-box");
+  const chatView = document.getElementById("chat-view");
+  const chatBox = document.getElementById("chat-box");
 
   // Wire up both inputs
-  document.getElementById("send-btn").addEventListener("click", () => sendMessage("question"));
-  document.getElementById("send-btn2").addEventListener("click", () => sendMessage("question2"));
+  document
+    .getElementById("send-btn")
+    .addEventListener("click", () => sendMessage("question"));
+  document
+    .getElementById("send-btn2")
+    .addEventListener("click", () => sendMessage("question2"));
   document.getElementById("question").addEventListener("keydown", e => {
-    if (e.key === "Enter") { e.preventDefault(); sendMessage("question"); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage("question");
+    }
   });
   document.getElementById("question2").addEventListener("keydown", e => {
-    if (e.key === "Enter") { e.preventDefault(); sendMessage("question2"); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage("question2");
+    }
   });
 
   async function sendMessage(inputId) {
-    const input    = document.getElementById(inputId);
+    const input = document.getElementById(inputId);
     const question = input.value.trim();
     if (!question) return;
 
@@ -86,10 +119,10 @@
     const typingId = appendTyping();
 
     try {
-      const res  = await fetch("/api/chat", {
-        method:  "POST",
+      const res = await fetch("/api/chat", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ question })
+        body: JSON.stringify({ question }),
       });
       const data = await res.json();
       removeTyping(typingId);
@@ -99,7 +132,7 @@
         reply += `\n\n📎 Sources : ${data.sources.join(", ")}`;
       }
       appendMessage("bot", reply);
-    } catch(err) {
+    } catch (err) {
       removeTyping(typingId);
       appendMessage("bot", "Erreur de connexion. Réessayez.");
     }
@@ -107,26 +140,39 @@
     document.getElementById("question2").focus();
   }
 
-function appendMessage(role, text) {
+  function appendMessage(role, text) {
     const isUser = role === "user";
-    const div = document.createElement("div");
-    div.style.cssText = `display:flex; gap:12px; align-items:flex-start; width:100%; ${isUser ? 'flex-direction:row-reverse;' : ''}`;
-    div.innerHTML = `
-      <div style="width:32px; height:32px; background:#292524; border:0.5px solid #44403C;
-                  border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-        <i data-lucide="${isUser ? 'user' : 'bot'}" style="width:16px; height:16px; color:${isUser ? '#A8A29E' : '#F97316'};"></i>
-      </div>
-      <div style="background:${isUser ? '#F97316' : '#292524'};
-                  color:${isUser ? '#1C1917' : '#F5F5F4'};
-                  border:0.5px solid ${isUser ? '#F97316' : '#44403C'};
+    const row = document.createElement("div");
+    row.style.cssText =
+      "display:flex; align-items:flex-start; gap:12px; width:100%;";
+
+    const avatar = `
+      <div style="width:32px; height:32px; flex-shrink:0; background:#292524;
+                  border:0.5px solid #44403C; border-radius:8px;
+                  display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="${isUser ? "user" : "bot"}"
+           style="width:16px; height:16px; color:${isUser ? "#A8A29E" : "#F97316"};"></i>
+      </div>`;
+
+    const bubble = `
+      <div style="max-width:70%; background:${isUser ? "#F97316" : "#292524"};
+                  color:${isUser ? "#1C1917" : "#F5F5F4"};
+                  border:0.5px solid ${isUser ? "#F97316" : "#44403C"};
                   border-radius:12px;
-                  ${isUser ? 'border-top-right-radius:2px;' : 'border-top-left-radius:2px;'}
+                  ${isUser ? "border-top-right-radius:2px;" : "border-top-left-radius:2px;"}
                   padding:10px 14px; font-size:14px; line-height:1.6;
-                  white-space:pre-wrap; word-wrap:break-word;
-                  display:inline-block; max-width:70%;">
+                  word-wrap:break-word;">
         ${text}
       </div>`;
-    chatBox.appendChild(div);
+
+    if (isUser) {
+      row.style.flexDirection = "row-reverse";
+      row.innerHTML = avatar + bubble;
+    } else {
+      row.innerHTML = avatar + bubble;
+    }
+
+    chatBox.appendChild(row);
     chatBox.scrollTop = chatBox.scrollHeight;
     lucide.createIcons();
   }
