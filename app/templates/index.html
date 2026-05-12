@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-3xl">
+
+  <!-- Hero -->
+  <div class="mb-10">
+    <h1 class="text-4xl font-bold text-primary mb-3">btp-cortex 🧠</h1>
+    <p class="text-lg text-content opacity-70">
+      Le cerveau derrière vos données BTP. Centralisez, indexez et interrogez
+      vos documents de construction en langage naturel.
+    </p>
+  </div>
+
+  <!-- Feature cards -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+    <a href="/upload" class="block bg-surface rounded-xl p-6 hover:ring-2 hover:ring-primary transition-all">
+      <i data-lucide="upload-cloud" class="text-primary mb-3" style="width:32px; height:32px; color:#F97316;"></i>
+      <h2 class="font-semibold text-primary mb-1">Upload</h2>
+      <p class="text-sm opacity-70">Importez vos PDF, Word, emails et tableaux Excel.</p>
+    </a>
+
+    <a href="/chat" class="block bg-surface rounded-xl p-6 hover:ring-2 hover:ring-primary transition-all">
+      <i data-lucide="message-circle" class="text-primary mb-3" style="width:32px; height:32px; color:#F97316;"></i>
+      <h2 class="font-semibold text-primary mb-1">Chat</h2>
+      <p class="text-sm opacity-70">Posez des questions sur vos documents en français.</p>
+    </a>
+
+    <a href="/documents" class="block bg-surface rounded-xl p-6 hover:ring-2 hover:ring-primary transition-all">
+      <i data-lucide="folder-open" class="text-primary mb-3" style="width:32px; height:32px; color:#F97316;"></i>
+      <h2 class="font-semibold text-primary mb-1">Documents</h2>
+      <p class="text-sm opacity-70">Consultez tous les documents indexés.</p>
+    </a>
+
+  </div>
+</div>
+
+{% endblock %}

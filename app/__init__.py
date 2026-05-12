@@ -20,9 +20,11 @@ def create_app():
     from app.routes.upload import upload_bp
     from app.routes.chat import chat_bp
     from app.routes.documents import docs_bp
+    from app.routes.home import home_bp
 
     app.register_blueprint(upload_bp)
     app.register_blueprint(chat_bp)
     app.register_blueprint(docs_bp)
+    app.register_blueprint(home_bp)
 
     return app
