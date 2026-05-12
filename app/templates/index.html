@@ -2,39 +2,61 @@
 
 {% block content %}
 
-<div class="max-w-3xl">
+<!-- Header -->
+<div class="mb-8">
+  <h1 class="text-2xl font-medium mb-1" style="color:#F5F5F4;">Bienvenue sur btp-cortex</h1>
+  <p class="text-sm" style="color:#78716C;">Le cerveau derrière vos données BTP — interrogez vos documents en langage naturel.</p>
+</div>
 
-  <!-- Hero -->
-  <div class="mb-10">
-    <h1 class="text-4xl font-bold text-primary mb-3">btp-cortex 🧠</h1>
-    <p class="text-lg text-content opacity-70">
-      Le cerveau derrière vos données BTP. Centralisez, indexez et interrogez
-      vos documents de construction en langage naturel.
-    </p>
+<!-- Stats row -->
+<div class="grid grid-cols-3 gap-3 mb-7">
+  <div class="rounded-xl p-5" style="background:#292524; border:0.5px solid #44403C;">
+    <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Documents</div>
+    <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ doc_count }}</div>
   </div>
-
-  <!-- Feature cards -->
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-
-    <a href="/upload" class="block bg-surface rounded-xl p-6 hover:ring-2 hover:ring-primary transition-all">
-      <i data-lucide="upload-cloud" class="text-primary mb-3" style="width:32px; height:32px; color:#F97316;"></i>
-      <h2 class="font-semibold text-primary mb-1">Upload</h2>
-      <p class="text-sm opacity-70">Importez vos PDF, Word, emails et tableaux Excel.</p>
-    </a>
-
-    <a href="/chat" class="block bg-surface rounded-xl p-6 hover:ring-2 hover:ring-primary transition-all">
-      <i data-lucide="message-circle" class="text-primary mb-3" style="width:32px; height:32px; color:#F97316;"></i>
-      <h2 class="font-semibold text-primary mb-1">Chat</h2>
-      <p class="text-sm opacity-70">Posez des questions sur vos documents en français.</p>
-    </a>
-
-    <a href="/documents" class="block bg-surface rounded-xl p-6 hover:ring-2 hover:ring-primary transition-all">
-      <i data-lucide="folder-open" class="text-primary mb-3" style="width:32px; height:32px; color:#F97316;"></i>
-      <h2 class="font-semibold text-primary mb-1">Documents</h2>
-      <p class="text-sm opacity-70">Consultez tous les documents indexés.</p>
-    </a>
-
+  <div class="rounded-xl p-5" style="background:#292524; border:0.5px solid #44403C;">
+    <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Chunks indexés</div>
+    <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ chunk_count }}</div>
   </div>
+  <div class="rounded-xl p-5" style="background:#292524; border:0.5px solid #44403C;">
+    <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Questions posées</div>
+    <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ question_count }}</div>
+  </div>
+</div>
+
+<!-- Feature cards -->
+<div class="grid grid-cols-3 gap-3">
+
+  <a href="/upload" class="block rounded-xl p-5 transition-all hover:ring-1 hover:ring-primary"
+     style="background:#292524; border:0.5px solid #44403C; text-decoration:none;">
+    <div class="rounded-lg flex items-center justify-center mb-4"
+         style="width:36px; height:36px; background:#431407;">
+      <i data-lucide="upload-cloud" style="width:18px; height:18px; color:#F97316;"></i>
+    </div>
+    <div class="text-sm font-medium mb-1" style="color:#F97316;">Upload</div>
+    <div class="text-xs leading-relaxed" style="color:#78716C;">Importez PDF, Word, emails et fichiers Excel dans votre base.</div>
+  </a>
+
+  <a href="/chat" class="block rounded-xl p-5 transition-all hover:ring-1 hover:ring-success"
+     style="background:#292524; border:0.5px solid #44403C; text-decoration:none;">
+    <div class="rounded-lg flex items-center justify-center mb-4"
+         style="width:36px; height:36px; background:#052e16;">
+      <i data-lucide="message-circle" style="width:18px; height:18px; color:#22C55E;"></i>
+    </div>
+    <div class="text-sm font-medium mb-1" style="color:#22C55E;">Chat</div>
+    <div class="text-xs leading-relaxed" style="color:#78716C;">Posez des questions en français et obtenez des réponses citées.</div>
+  </a>
+
+  <a href="/documents" class="block rounded-xl p-5 transition-all hover:ring-1"
+     style="background:#292524; border:0.5px solid #44403C; text-decoration:none; --tw-ring-color:#60A5FA;">
+    <div class="rounded-lg flex items-center justify-center mb-4"
+         style="width:36px; height:36px; background:#172554;">
+      <i data-lucide="folder-open" style="width:18px; height:18px; color:#60A5FA;"></i>
+    </div>
+    <div class="text-sm font-medium mb-1" style="color:#60A5FA;">Documents</div>
+    <div class="text-xs leading-relaxed" style="color:#78716C;">Consultez et gérez tous les documents indexés dans votre registre.</div>
+  </a>
+
 </div>
 
 {% endblock %}
