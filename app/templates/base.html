@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>btp-cortex 🧠</title>
+  <title>btp-cortex</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@heroicons/react@2.0.18/index.min.css">
   <script>
     tailwind.config = {
       theme: {
@@ -26,16 +25,35 @@
 <body class="min-h-screen flex bg-base text-content">
 
   <!-- Sidebar -->
-  <aside class="flex-shrink-0 flex flex-col p-6 gap-8 bg-surface" style="width:240px;">
-    <a href="/" class="tracking-tight" style="font-size:20px; font-weight:700; color:#F97316; letter-spacing:-0.5px; font-family: 'Georgia', serif;">
-      BTP<span style="color:#F5F5F4; font-weight:300;">cortex</span>
+  <aside class="flex-shrink-0 flex flex-col p-5 gap-6" style="width:220px; background:#292524;">
+
+    <!-- Logo -->
+    <a href="/" style="display:flex; align-items:center; gap:10px; text-decoration:none; padding:4px 0;">
+      <div style="width:30px; height:30px; background:#F97316; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 20h20M4 20V10l8-6 8 6v10"/>
+          <rect x="9" y="14" width="6" height="6"/>
+        </svg>
+      </div>
+      <span style="font-size:15px; font-weight:600; color:#F5F5F4; letter-spacing:-0.3px;">btp <span style="color:#F97316; font-weight:700;">cortex</span></span>
     </a>
-    <nav class="flex flex-col gap-4 text-sm font-medium">
-      <a href="/"          class="hover:text-primary transition-colors">🏠 Accueil</a>
-      <a href="/upload"    class="hover:text-primary transition-colors">📤 Upload</a>
-      <a href="/chat"      class="hover:text-primary transition-colors">💬 Chat</a>
-      <a href="/documents" class="hover:text-primary transition-colors">📁 Documents</a>
+
+    <!-- Nav -->
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="/" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; color:#A8A29E; text-decoration:none;" class="hover:bg-base hover:text-content transition-colors">
+        <i data-lucide="home" style="width:16px; height:16px; flex-shrink:0;"></i> Accueil
+      </a>
+      <a href="/upload" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; color:#A8A29E; text-decoration:none;" class="hover:bg-base hover:text-content transition-colors">
+        <i data-lucide="upload-cloud" style="width:16px; height:16px; flex-shrink:0;"></i> Upload
+      </a>
+      <a href="/chat" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; color:#A8A29E; text-decoration:none;" class="hover:bg-base hover:text-content transition-colors">
+        <i data-lucide="message-circle" style="width:16px; height:16px; flex-shrink:0;"></i> Chat
+      </a>
+      <a href="/documents" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; color:#A8A29E; text-decoration:none;" class="hover:bg-base hover:text-content transition-colors">
+        <i data-lucide="folder-open" style="width:16px; height:16px; flex-shrink:0;"></i> Documents
+      </a>
     </nav>
+
   </aside>
 
   <!-- Main content -->
@@ -51,9 +69,9 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
-
     {% block content %}{% endblock %}
   </main>
-<script>lucide.createIcons();</script>
+
+  <script>lucide.createIcons();</script>
 </body>
 </html>
