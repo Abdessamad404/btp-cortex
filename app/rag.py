@@ -14,6 +14,14 @@ def ask(question: str, projet: str = None) -> dict:
     Optionally filter results to a specific project.
     """
 
+    # Handle greetings and small talk before hitting Pinecone
+    greetings = ["hi", "hello", "bonjour", "salut", "hey", "salam", "bonsoir"]
+    if question.lower().strip().rstrip("!?.") in greetings:
+        return {
+            "answer": "Bonjour ! Je suis votre assistant BTP. Posez-moi une question sur vos documents et je vous répondrai avec précision.",
+            "sources": [],
+        }
+
     # Step 1 — embed the question into a vector
     question_vector = embed([question])[0]
 
@@ -22,7 +30,10 @@ def ask(question: str, projet: str = None) -> dict:
     chunks = search(question_vector, top_k=TOP_K, filter=filter)
 
     if not chunks:
-        return {"answer": "Aucun document pertinent trouvé.", "sources": []}
+        return {
+            "answer": "Je n'ai trouvé aucun document indexé pour répondre à cette question. Commencez par importer vos fichiers BTP via la page Upload, puis reposez votre question.",
+            "sources": [],
+        }
 
     # Step 3 — build the context block from retrieved chunks
     context = "\n\n---\n\n".join(
