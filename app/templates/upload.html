@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-2xl">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-2xl font-medium mb-1" style="color:#F5F5F4;">Upload de document</h1>
+    <p class="text-sm" style="color:#78716C;">Importez un fichier et renseignez ses métadonnées BTP.</p>
+  </div>
+
+  <!-- Form -->
+  <form method="POST" enctype="multipart/form-data"
+        class="rounded-xl p-6 flex flex-col gap-5"
+        style="background:#292524; border:0.5px solid #44403C;">
+
+    <!-- File drop zone -->
+    <div class="rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 p-8 cursor-pointer"
+         style="border-color:#44403C;"
+         onclick="document.getElementById('file').click()">
+      <i data-lucide="upload-cloud" style="width:32px; height:32px; color:#F97316;"></i>
+      <p class="text-sm font-medium" style="color:#F5F5F4;">Cliquez pour choisir un fichier</p>
+      <p class="text-xs" style="color:#78716C;">PDF, DOCX, TXT, EML, CSV, XLSX</p>
+      <p class="text-xs font-medium mt-1" id="file-label" style="color:#F97316;"></p>
+    </div>
+    <input type="file" id="file" name="file" class="hidden"
+           accept=".pdf,.docx,.txt,.eml,.csv,.xlsx"
+           onchange="document.getElementById('file-label').textContent = this.files[0]?.name || ''">
+
+    <!-- Metadata grid -->
+    <div class="grid grid-cols-2 gap-4">
+
+      <div class="flex flex-col gap-1">
+        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Projet</label>
+        <input type="text" name="projet" placeholder="ex: Résidence Oran"
+               class="rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Auteur</label>
+        <input type="text" name="auteur" placeholder="ex: Youssef Benali"
+               class="rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Lot technique</label>
+        <input type="text" name="lot_technique" placeholder="ex: Gros-oeuvre"
+               class="rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Type de document</label>
+        <input type="text" name="type_document" placeholder="ex: Rapport, Plan, Contrat"
+               class="rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+      </div>
+
+    </div>
+
+    <!-- Criticité -->
+    <div class="flex flex-col gap-1">
+      <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Criticité</label>
+      <select name="criticite"
+              class="rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+              style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+        <option value="normale">Normale</option>
+        <option value="haute">Haute</option>
+        <option value="critique">Critique</option>
+      </select>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit"
+            class="rounded-lg px-4 py-3 text-sm font-semibold transition-all hover:opacity-90"
+            style="background:#F97316; color:#1C1917;">
+      Ingérer le document
+    </button>
+
+  </form>
+</div>
+
+{% endblock %}
