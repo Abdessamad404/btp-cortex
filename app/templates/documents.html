@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+  <!-- Header -->
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-medium mb-1" style="color:#F5F5F4;">Documents indexés</h1>
+      <p class="text-sm" style="color:#78716C;">Tous les fichiers ingérés dans votre base de connaissances.</p>
+    </div>
+    <a href="/upload"
+       class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+       style="background:#F97316; color:#1C1917; text-decoration:none;">
+      <i data-lucide="plus" style="width:14px; height:14px;"></i>
+      Ajouter
+    </a>
+  </div>
+
+  {% if documents %}
+  <!-- Table -->
+  <div class="rounded-xl overflow-hidden" style="border:0.5px solid #44403C;">
+    <table class="w-full text-sm">
+      <thead>
+        <tr style="background:#292524; border-bottom:0.5px solid #44403C;">
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Fichier</th>
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Type</th>
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Projet</th>
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Auteur</th>
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Criticité</th>
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Chunks</th>
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Statut</th>
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in documents %}
+        <tr style="border-bottom:0.5px solid #44403C;" class="hover:bg-surface transition-colors">
+          <td class="px-4 py-3 font-medium" style="color:#F5F5F4;">{{ doc['filename'] }}</td>
+          <td class="px-4 py-3">
+            <span class="rounded px-2 py-1 text-xs uppercase" style="background:#1C1917; color:#A8A29E;">
+              {{ doc['file_type'] }}
+            </span>
+          </td>
+          <td class="px-4 py-3" style="color:#A8A29E;">{{ doc['projet'] or '—' }}</td>
+          <td class="px-4 py-3" style="color:#A8A29E;">{{ doc['auteur'] or '—' }}</td>
+          <td class="px-4 py-3">
+            {% if doc['criticite'] == 'critique' %}
+              <span class="rounded px-2 py-1 text-xs" style="background:#450a0a; color:#f87171;">Critique</span>
+            {% elif doc['criticite'] == 'haute' %}
+              <span class="rounded px-2 py-1 text-xs" style="background:#431407; color:#F97316;">Haute</span>
+            {% else %}
+              <span class="rounded px-2 py-1 text-xs" style="background:#292524; color:#78716C;">Normale</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3" style="color:#A8A29E;">{{ doc['chunk_count'] or 0 }}</td>
+          <td class="px-4 py-3">
+            {% if doc['status'] == 'processed' %}
+              <span class="rounded px-2 py-1 text-xs" style="background:#052e16; color:#22C55E;">Traité</span>
+            {% else %}
+              <span class="rounded px-2 py-1 text-xs" style="background:#292524; color:#78716C;">En attente</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3 text-xs" style="color:#78716C;">{{ doc['uploaded_at'][:10] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% else %}
+  <!-- Empty state -->
+  <div class="flex flex-col items-center justify-center rounded-xl py-20"
+       style="background:#292524; border:0.5px solid #44403C;">
+    <i data-lucide="inbox" style="width:40px; height:40px; color:#44403C; margin-bottom:16px;"></i>
+    <p class="text-sm font-medium mb-1" style="color:#78716C;">Aucun document indexé</p>
+    <p class="text-xs mb-4" style="color:#44403C;">Importez votre premier fichier pour commencer.</p>
+    <a href="/upload"
+       class="rounded-lg px-4 py-2 text-sm font-semibold transition-all hover:opacity-90"
+       style="background:#F97316; color:#1C1917; text-decoration:none;">
+      Importer un fichier
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

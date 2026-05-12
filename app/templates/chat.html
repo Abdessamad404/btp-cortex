@@ -2,65 +2,87 @@
 
 {% block content %}
 
-<div class="flex flex-col mx-auto" style="max-width:800px; height:calc(100vh - 80px);">
+<div id="chat-container" class="flex flex-col mx-auto" style="max-width:700px; height:calc(100vh - 80px);">
 
-  <!-- Header -->
-  <div class="mb-6">
-    <h1 class="text-2xl font-medium mb-1" style="color:#F5F5F4;">Chat</h1>
-    <p class="text-sm" style="color:#78716C;">Posez vos questions sur vos documents BTP.</p>
-  </div>
+  <!-- Centered empty state (shown when no messages) -->
+  <div id="empty-state" class="flex flex-col items-center justify-center flex-1 gap-6">
+    <div class="text-center">
+      <h1 class="text-2xl font-medium mb-2" style="color:#F5F5F4;">Que voulez-vous savoir ?</h1>
+      <p class="text-sm" style="color:#78716C;">Posez une question sur vos documents BTP indexés.</p>
+    </div>
 
-  <!-- Chat box -->
-  <div id="chat-box" class="flex-1 overflow-y-auto flex flex-col gap-4 mb-4 pr-1">
-    <!-- Welcome message -->
-    <div class="flex gap-3 items-start">
-      <div class="rounded-lg flex items-center justify-center flex-shrink-0"
-           style="width:32px; height:32px; background:#292524; border:0.5px solid #44403C;">
-        <i data-lucide="bot" style="width:16px; height:16px; color:#F97316;"></i>
-      </div>
-      <div class="rounded-xl rounded-tl-none px-4 py-3 text-sm" style="background:#292524; color:#F5F5F4; max-width:75%;">
-        Bonjour ! Posez-moi une question sur vos documents BTP indexés.
-      </div>
+    <!-- Input centered -->
+    <div class="rounded-xl flex items-center gap-3 px-4 py-3 w-full"
+         style="background:#292524; border:0.5px solid #44403C;">
+      <input id="question" type="text"
+             placeholder="Ex: Quelle est la résistance du béton pour les fondations ?"
+             class="flex-1 bg-transparent text-sm outline-none"
+             style="color:#F5F5F4;"
+             autocomplete="off">
+      <button id="send-btn"
+              class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+              style="background:#F97316; color:#1C1917; flex-shrink:0;">
+        <i data-lucide="send" style="width:14px; height:14px;"></i>
+        Envoyer
+      </button>
     </div>
   </div>
 
-  <!-- Input area -->
-  <div class="rounded-xl flex items-center gap-3 px-4 py-3"
-       style="background:#292524; border:0.5px solid #44403C;">
-    <input id="question" type="text"
-           placeholder="Ex: Quelle est la résistance du béton pour les fondations ?"
-           class="flex-1 bg-transparent text-sm outline-none"
-           style="color:#F5F5F4;"
-           autocomplete="off">
-    <button id="send-btn"
-            class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
-            style="background:#F97316; color:#1C1917; flex-shrink:0;">
-      <i data-lucide="send" style="width:14px; height:14px;"></i>
-      Envoyer
-    </button>
+  <!-- Chat view (hidden until first message) -->
+  <div id="chat-view" class="flex-col hidden" style="height:100%;">
+
+    <!-- Messages -->
+    <div id="chat-box" class="flex-1 overflow-y-auto flex flex-col gap-4 py-4 pr-1"></div>
+
+    <!-- Input at bottom -->
+    <div class="rounded-xl flex items-center gap-3 px-4 py-3 mb-2"
+         style="background:#292524; border:0.5px solid #44403C;">
+      <input id="question2" type="text"
+             placeholder="Continuez la conversation..."
+             class="flex-1 bg-transparent text-sm outline-none"
+             style="color:#F5F5F4;"
+             autocomplete="off">
+      <button id="send-btn2"
+              class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+              style="background:#F97316; color:#1C1917; flex-shrink:0;">
+        <i data-lucide="send" style="width:14px; height:14px;"></i>
+        Envoyer
+      </button>
+    </div>
   </div>
 
 </div>
 
 <script>
-  const chatBox  = document.getElementById("chat-box");
-  const input    = document.getElementById("question");
-  const sendBtn  = document.getElementById("send-btn");
+  const emptyState = document.getElementById("empty-state");
+  const chatView   = document.getElementById("chat-view");
+  const chatBox    = document.getElementById("chat-box");
 
-  sendBtn.addEventListener("click", sendMessage);
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  // Wire up both inputs
+  document.getElementById("send-btn").addEventListener("click", () => sendMessage("question"));
+  document.getElementById("send-btn2").addEventListener("click", () => sendMessage("question2"));
+  document.getElementById("question").addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); sendMessage("question"); }
+  });
+  document.getElementById("question2").addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); sendMessage("question2"); }
   });
 
-  async function sendMessage() {
+  async function sendMessage(inputId) {
+    const input    = document.getElementById(inputId);
     const question = input.value.trim();
     if (!question) return;
 
+    // Switch from empty state to chat view on first message
+    if (!emptyState.classList.contains("hidden")) {
+      emptyState.classList.add("hidden");
+      chatView.classList.remove("hidden");
+      chatView.classList.add("flex");
+    }
+
     appendMessage("user", question);
     input.value = "";
-    sendBtn.disabled = true;
 
-    // Show typing indicator
     const typingId = appendTyping();
 
     try {
@@ -82,8 +104,7 @@
       appendMessage("bot", "Erreur de connexion. Réessayez.");
     }
 
-    sendBtn.disabled = false;
-    input.focus();
+    document.getElementById("question2").focus();
   }
 
   function appendMessage(role, text) {
@@ -106,7 +127,7 @@
     lucide.createIcons();
   }
 
-  function appendTyping(id) {
+  function appendTyping() {
     const uid = "typing-" + Date.now();
     const div = document.createElement("div");
     div.id = uid;
