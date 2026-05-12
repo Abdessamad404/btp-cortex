@@ -8,9 +8,16 @@ home_bp = Blueprint("home", __name__)
 def index():
     conn = get_connection()
     doc_count = conn.execute("SELECT COUNT(*) FROM documents").fetchone()[0]
-    chunk_count = conn.execute("SELECT SUM(status) FROM documents").fetchone()[0] or 0
-    question_count = conn.execute("SELECT COUNT(*) FROM questions").fetchone()[0] or 0
+    chunk_count = (
+        conn.execute("SELECT SUM(chunk_count) FROM documents").fetchone()[0] or 0
+    )
+    proj_count = conn.execute(
+        "SELECT COUNT(DISTINCT projet) FROM documents"
+    ).fetchone()[0]
     conn.close()
     return render_template(
-        "index.html", doc_count=doc_count, chunk_count=chunk_count, question_count=question_count
+        "index.html",
+        doc_count=doc_count,
+        chunk_count=chunk_count,
+        proj_count=proj_count,
     )
