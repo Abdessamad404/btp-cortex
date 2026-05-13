@@ -81,6 +81,8 @@
   const chatView = document.getElementById("chat-view");
   const chatBox = document.getElementById("chat-box");
 
+  let conversationId = null; // holds the active conversation id
+
   // Wire up both inputs
   document
     .getElementById("send-btn")
@@ -106,11 +108,16 @@
     const question = input.value.trim();
     if (!question) return;
 
-    // Switch from empty state to chat view on first message
+    // First message — switch to chat view and create a conversation
     if (!emptyState.classList.contains("hidden")) {
       emptyState.classList.add("hidden");
       chatView.classList.remove("hidden");
       chatView.classList.add("flex");
+
+      // Create conversation in DB, store its id
+      const conv = await fetch("/api/conversations", { method: "POST" });
+      const convData = await conv.json();
+      conversationId = convData.id;
     }
 
     appendMessage("user", question);
@@ -122,7 +129,7 @@
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, conversation_id: conversationId }),
       });
       const data = await res.json();
       removeTyping(typingId);
@@ -176,6 +183,7 @@
     chatBox.scrollTop = chatBox.scrollHeight;
     lucide.createIcons();
   }
+
   function appendTyping() {
     const uid = "typing-" + Date.now();
     const div = document.createElement("div");
