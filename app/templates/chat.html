@@ -194,7 +194,7 @@
                   ${isUser ? "border-top-right-radius:2px;" : "border-top-left-radius:2px;"}
                   padding:10px 14px; font-size:14px; line-height:1.6;
                   word-wrap:break-word;">
-        ${text}
+        ${marked.parse(text)}
       </div>`;
 
     if (isUser) {
