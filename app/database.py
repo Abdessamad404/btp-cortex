@@ -6,6 +6,7 @@ from config import DB_PATH
 def get_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")  # enforce cascade deletes
     return conn
 
 
@@ -42,7 +43,7 @@ def init_db():
             role            TEXT NOT NULL,
             content         TEXT NOT NULL,
             created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (conversation_id) REFERENCES conversations(id)
+            FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
         )
     """)
     conn.commit()

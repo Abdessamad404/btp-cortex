@@ -41,3 +41,23 @@ def get_messages(conversation_id):
     ).fetchall()
     conn.close()
     return jsonify([dict(row) for row in rows])
+
+
+@conversations_bp.route("/api/conversations/<int:conversation_id>", methods=["DELETE"])
+def delete_conversation(conversation_id):
+    """Delete a conversation and all its messages (cascade)."""
+    conn = get_connection()
+    conn.execute("DELETE FROM conversations WHERE id = ?", (conversation_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"status": "deleted"})
+
+
+@conversations_bp.route("/api/conversations", methods=["DELETE"])
+def delete_all_conversations():
+    """Delete all conversations and their messages (cascade)."""
+    conn = get_connection()
+    conn.execute("DELETE FROM conversations")
+    conn.commit()
+    conn.close()
+    return jsonify({"status": "all deleted"})

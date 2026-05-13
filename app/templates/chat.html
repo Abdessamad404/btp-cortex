@@ -83,6 +83,31 @@
 
   let conversationId = null; // holds the active conversation id
 
+  // Load an existing conversation if ?conv=id is in the URL
+  async function loadConversation() {
+    const params = new URLSearchParams(window.location.search);
+    const convId = params.get("conv");
+    if (!convId) return;
+
+    conversationId = parseInt(convId);
+
+    const res = await fetch(`/api/conversations/${convId}/messages`);
+    const messages = await res.json();
+    if (messages.length === 0) return;
+
+    // Switch to chat view
+    emptyState.classList.add("hidden");
+    chatView.classList.remove("hidden");
+    chatView.classList.add("flex");
+
+    // Render each saved message
+    messages.forEach(msg => {
+      appendMessage(msg.role === "user" ? "user" : "bot", msg.content);
+    });
+  }
+
+  loadConversation();
+
   // Wire up both inputs
   document
     .getElementById("send-btn")
