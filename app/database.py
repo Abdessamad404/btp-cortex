@@ -12,8 +12,7 @@ def get_connection():
 def init_db():
     os.makedirs("data", exist_ok=True)
     conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
+    conn.execute("""
         CREATE TABLE IF NOT EXISTS documents (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
             filename      TEXT NOT NULL,
@@ -27,6 +26,23 @@ def init_db():
             chunk_count   INTEGER DEFAULT 0,
             uploaded_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             status        TEXT DEFAULT 'pending'
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS conversations (
+            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            title      TEXT DEFAULT 'Nouvelle conversation',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id              INTEGER PRIMARY KEY AUTOINCREMENT,
+            conversation_id INTEGER NOT NULL,
+            role            TEXT NOT NULL,
+            content         TEXT NOT NULL,
+            created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (conversation_id) REFERENCES conversations(id)
         )
     """)
     conn.commit()
