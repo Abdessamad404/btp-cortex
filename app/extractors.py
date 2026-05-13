@@ -41,8 +41,8 @@ def extract_eml(filepath):
 
 
 def extract_csv(filepath):
-    df = pd.read_csv(filepath) # DataFrame
-    return df.to_string(index=False) 
+    df = pd.read_csv(filepath)  # DataFrame
+    return df.to_string(index=False)
 
 
 def extract_xlsx(filepath):

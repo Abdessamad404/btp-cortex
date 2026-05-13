@@ -1,81 +1,64 @@
-{% extends "base.html" %} {% block content %}
-
-<div
-  id="chat-container"
-  class="flex flex-col mx-auto"
-  style="max-width: 900px; height: calc(100vh - 80px); overflow-x: hidden"
->
-  <!-- Centered empty state (shown when no messages) -->
-  <div
-    id="empty-state"
-    class="flex flex-col items-center justify-center flex-1 gap-6"
-  >
-    <div class="text-center">
-      <h1 class="text-2xl font-medium mb-2" style="color: #f5f5f4">
-        Que voulez-vous savoir ?
-      </h1>
-      <p class="text-sm" style="color: #78716c">
-        Posez une question sur vos documents BTP indexés.
-      </p>
+{% extends "base.html" %}
+{% block content %}
+    <div id="chat-container"
+         class="flex flex-col mx-auto"
+         style="max-width: 900px;
+                height: calc(100vh - 80px);
+                overflow-x: hidden">
+        <!-- Centered empty state (shown when no messages) -->
+        <div id="empty-state"
+             class="flex flex-col items-center justify-center flex-1 gap-6">
+            <div class="text-center">
+                <h1 class="text-2xl font-medium mb-2" style="color: #f5f5f4">Que voulez-vous savoir ?</h1>
+                <p class="text-sm" style="color: #78716c">Posez une question sur vos documents BTP indexés.</p>
+            </div>
+            <!-- Input centered -->
+            <div class="rounded-xl flex items-center gap-3 px-4 py-3 w-full"
+                 style="background: #292524;
+                        border: 0.5px solid #44403c">
+                <input id="question"
+                       type="text"
+                       placeholder="Ex: Quelle est la résistance du béton pour les fondations ?"
+                       class="flex-1 bg-transparent text-sm outline-none"
+                       style="color: #f5f5f4"
+                       autocomplete="off" />
+                <button id="send-btn"
+                        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+                        style="background: #f97316;
+                               color: #1c1917;
+                               flex-shrink: 0">
+                    <i data-lucide="send" style="width: 14px; height: 14px"></i>
+                    Envoyer
+                </button>
+            </div>
+        </div>
+        <!-- Chat view (hidden until first message) -->
+        <div id="chat-view" class="flex-col hidden" style="height: 100%">
+            <!-- Messages -->
+            <div id="chat-box"
+                 class="flex-1 overflow-y-auto flex flex-col gap-4 py-4 pr-1"></div>
+            <!-- Input at bottom -->
+            <div class="rounded-xl flex items-center gap-3 px-4 py-3 mb-2"
+                 style="background: #292524;
+                        border: 0.5px solid #44403c">
+                <input id="question2"
+                       type="text"
+                       placeholder="Continuez la conversation..."
+                       class="flex-1 bg-transparent text-sm outline-none"
+                       style="color: #f5f5f4"
+                       autocomplete="off" />
+                <button id="send-btn2"
+                        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+                        style="background: #f97316;
+                               color: #1c1917;
+                               flex-shrink: 0">
+                    <i data-lucide="send" style="width: 14px; height: 14px"></i>
+                    Envoyer
+                </button>
+            </div>
+        </div>
     </div>
-
-    <!-- Input centered -->
-    <div
-      class="rounded-xl flex items-center gap-3 px-4 py-3 w-full"
-      style="background: #292524; border: 0.5px solid #44403c"
-    >
-      <input
-        id="question"
-        type="text"
-        placeholder="Ex: Quelle est la résistance du béton pour les fondations ?"
-        class="flex-1 bg-transparent text-sm outline-none"
-        style="color: #f5f5f4"
-        autocomplete="off"
-      />
-      <button
-        id="send-btn"
-        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
-        style="background: #f97316; color: #1c1917; flex-shrink: 0"
-      >
-        <i data-lucide="send" style="width: 14px; height: 14px"></i>
-        Envoyer
-      </button>
-    </div>
-  </div>
-
-  <!-- Chat view (hidden until first message) -->
-  <div id="chat-view" class="flex-col hidden" style="height: 100%">
-    <!-- Messages -->
-    <div
-      id="chat-box"
-      class="flex-1 overflow-y-auto flex flex-col gap-4 py-4 pr-1"
-    ></div>
-
-    <!-- Input at bottom -->
-    <div
-      class="rounded-xl flex items-center gap-3 px-4 py-3 mb-2"
-      style="background: #292524; border: 0.5px solid #44403c"
-    >
-      <input
-        id="question2"
-        type="text"
-        placeholder="Continuez la conversation..."
-        class="flex-1 bg-transparent text-sm outline-none"
-        style="color: #f5f5f4"
-        autocomplete="off"
-      />
-      <button
-        id="send-btn2"
-        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
-        style="background: #f97316; color: #1c1917; flex-shrink: 0"
-      >
-        <i data-lucide="send" style="width: 14px; height: 14px"></i>
-        Envoyer
-      </button>
-    </div>
-  </div>
-</div>
-<style>
+    <style>
   #chat-box::-webkit-scrollbar {
     width: 4px;
   }
@@ -111,8 +94,8 @@
   #chat-box .bot-bubble {
     overflow-x: auto;
   }
-</style>
-<script>
+    </style>
+    <script>
   const emptyState = document.getElementById("empty-state");
   const chatView = document.getElementById("chat-view");
   const chatBox = document.getElementById("chat-box");
@@ -215,21 +198,12 @@
       "display:flex; align-items:flex-start; gap:12px; width:100%;";
 
     const avatar = `
-      <div style="width:32px; height:32px; flex-shrink:0; background:#292524;
-                  border:0.5px solid #44403C; border-radius:8px;
-                  display:flex; align-items:center; justify-content:center;">
-        <i data-lucide="${isUser ? "user" : "bot"}"
-           style="width:16px; height:16px; color:${isUser ? "#A8A29E" : "#F97316"};"></i>
+      <div style="width:32px; height:32px; flex-shrink:0; background:#292524; border:0.5px solid #44403C; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="${isUser ? "user" : "bot"}" style="width:16px; height:16px; color:${isUser ? "#A8A29E" : "#F97316"};"></i>
       </div>`;
 
     const bubble = `
-      <div class="${isUser ? "" : "bot-bubble"}" style="max-width:75%; background:${isUser ? "#F97316" : "#292524"};
-                  color:${isUser ? "#1C1917" : "#F5F5F4"};
-                  border:0.5px solid ${isUser ? "#F97316" : "#44403C"};
-                  border-radius:12px;
-                  ${isUser ? "border-top-right-radius:2px;" : "border-top-left-radius:2px;"}
-                  padding:10px 14px; font-size:14px; line-height:1.6;
-                  word-wrap:break-word;">
+      <div class="${isUser ? "" : "bot-bubble"}" style="max-width:75%; background:${isUser ? "#F97316" : "#292524"}; color:${isUser ? "#1C1917" : "#F5F5F4"}; border:0.5px solid ${isUser ? "#F97316" : "#44403C"}; border-radius:12px; ${isUser ? "border-top-right-radius:2px;" : "border-top-left-radius:2px;"} padding:10px 14px; font-size:14px; line-height:1.6; word-wrap:break-word;">
                   ${isUser ? text : marked.parse(text)}
       </div>`;
 
@@ -251,12 +225,10 @@
     div.id = uid;
     div.className = "flex gap-3 items-start";
     div.innerHTML = `
-      <div style="width:32px; height:32px; background:#292524; border:0.5px solid #44403C;
-                  border-radius:8px; display:flex; align-items:center; justify-content:center;">
+      <div style="width:32px; height:32px; background:#292524; border:0.5px solid #44403C; border-radius:8px; display:flex; align-items:center; justify-content:center;">
         <i data-lucide="bot" style="width:16px; height:16px; color:#F97316;"></i>
       </div>
-      <div style="background:#292524; border:0.5px solid #44403C; border-radius:12px;
-                  border-top-left-radius:2px; padding:12px 16px; font-size:14px; color:#78716C;">
+      <div style="background:#292524; border:0.5px solid #44403C; border-radius:12px; border-top-left-radius:2px; padding:12px 16px; font-size:14px; color:#78716C;">
         En train de réfléchir...
       </div>`;
     chatBox.appendChild(div);
@@ -269,6 +241,5 @@
     const el = document.getElementById(id);
     if (el) el.remove();
   }
-</script>
-
+    </script>
 {% endblock %}

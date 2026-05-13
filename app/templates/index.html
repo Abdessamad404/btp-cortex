@@ -1,62 +1,92 @@
 {% extends "base.html" %}
-
 {% block content %}
-
-<!-- Header -->
-<div class="mb-8">
-  <h1 class="text-2xl font-medium mb-1" style="color:#F5F5F4;">Bienvenue sur btp-cortex</h1>
-  <p class="text-sm" style="color:#78716C;">Le cerveau derrière vos données BTP — interrogez vos documents en langage naturel.</p>
-</div>
-
-<!-- Stats row -->
-<div class="grid grid-cols-3 gap-3 mb-7">
-  <div class="rounded-xl p-5" style="background:#292524; border:0.5px solid #44403C;">
-    <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Documents</div>
-    <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ doc_count }}</div>
-  </div>
-  <div class="rounded-xl p-5" style="background:#292524; border:0.5px solid #44403C;">
-    <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Chunks indexés</div>
-    <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ chunk_count }}</div>
-  </div>
-  <div class="rounded-xl p-5" style="background:#292524; border:0.5px solid #44403C;">
-    <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Projets</div>
-    <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ proj_count }}</div>
-  </div>
-</div>
-
-<!-- Feature cards -->
-<div class="grid grid-cols-3 gap-3">
-
-  <a href="/upload" class="block rounded-xl p-5 transition-all hover:ring-1 hover:ring-primary"
-     style="background:#292524; border:0.5px solid #44403C; text-decoration:none;">
-    <div class="rounded-lg flex items-center justify-center mb-4"
-         style="width:36px; height:36px; background:#431407;">
-      <i data-lucide="upload-cloud" style="width:18px; height:18px; color:#F97316;"></i>
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-2xl font-medium mb-1" style="color:#F5F5F4;">Bienvenue sur btp-cortex</h1>
+        <p class="text-sm" style="color:#78716C;">
+            Le cerveau derrière vos données BTP — interrogez vos documents en langage naturel.
+        </p>
     </div>
-    <div class="text-sm font-medium mb-1" style="color:#F97316;">Upload</div>
-    <div class="text-xs leading-relaxed" style="color:#78716C;">Importez PDF, Word, emails et fichiers Excel dans votre base.</div>
-  </a>
-
-  <a href="/chat" class="block rounded-xl p-5 transition-all hover:ring-1 hover:ring-success"
-     style="background:#292524; border:0.5px solid #44403C; text-decoration:none;">
-    <div class="rounded-lg flex items-center justify-center mb-4"
-         style="width:36px; height:36px; background:#052e16;">
-      <i data-lucide="message-circle" style="width:18px; height:18px; color:#22C55E;"></i>
+    <!-- Stats row -->
+    <div class="grid grid-cols-3 gap-3 mb-7">
+        <div class="rounded-xl p-5"
+             style="background:#292524;
+                    border:0.5px solid #44403C">
+            <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Documents</div>
+            <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ doc_count }}</div>
+        </div>
+        <div class="rounded-xl p-5"
+             style="background:#292524;
+                    border:0.5px solid #44403C">
+            <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Chunks indexés</div>
+            <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ chunk_count }}</div>
+        </div>
+        <div class="rounded-xl p-5"
+             style="background:#292524;
+                    border:0.5px solid #44403C">
+            <div class="text-xs uppercase tracking-widest mb-2" style="color:#78716C;">Projets</div>
+            <div class="text-2xl font-medium" style="color:#F5F5F4;">{{ proj_count }}</div>
+        </div>
     </div>
-    <div class="text-sm font-medium mb-1" style="color:#22C55E;">Chat</div>
-    <div class="text-xs leading-relaxed" style="color:#78716C;">Posez des questions en français et obtenez des réponses citées.</div>
-  </a>
-
-  <a href="/documents" class="block rounded-xl p-5 transition-all hover:ring-1"
-     style="background:#292524; border:0.5px solid #44403C; text-decoration:none; --tw-ring-color:#60A5FA;">
-    <div class="rounded-lg flex items-center justify-center mb-4"
-         style="width:36px; height:36px; background:#172554;">
-      <i data-lucide="folder-open" style="width:18px; height:18px; color:#60A5FA;"></i>
+    <!-- Feature cards -->
+    <div class="grid grid-cols-3 gap-3">
+        <a href="/upload"
+           class="block rounded-xl p-5 transition-all hover:ring-1 hover:ring-primary"
+           style="background:#292524;
+                  border:0.5px solid #44403C;
+                  text-decoration:none">
+            <div class="rounded-lg flex items-center justify-center mb-4"
+                 style="width:36px;
+                        height:36px;
+                        background:#431407">
+                <i data-lucide="upload-cloud"
+                   style="width:18px;
+                          height:18px;
+                          color:#F97316"></i>
+            </div>
+            <div class="text-sm font-medium mb-1" style="color:#F97316;">Upload</div>
+            <div class="text-xs leading-relaxed" style="color:#78716C;">
+                Importez PDF, Word, emails et fichiers Excel dans votre base.
+            </div>
+        </a>
+        <a href="/chat"
+           class="block rounded-xl p-5 transition-all hover:ring-1 hover:ring-success"
+           style="background:#292524;
+                  border:0.5px solid #44403C;
+                  text-decoration:none">
+            <div class="rounded-lg flex items-center justify-center mb-4"
+                 style="width:36px;
+                        height:36px;
+                        background:#052e16">
+                <i data-lucide="message-circle"
+                   style="width:18px;
+                          height:18px;
+                          color:#22C55E"></i>
+            </div>
+            <div class="text-sm font-medium mb-1" style="color:#22C55E;">Chat</div>
+            <div class="text-xs leading-relaxed" style="color:#78716C;">
+                Posez des questions en français et obtenez des réponses citées.
+            </div>
+        </a>
+        <a href="/documents"
+           class="block rounded-xl p-5 transition-all hover:ring-1"
+           style="background:#292524;
+                  border:0.5px solid #44403C;
+                  text-decoration:none;
+                  --tw-ring-color:#60A5FA">
+            <div class="rounded-lg flex items-center justify-center mb-4"
+                 style="width:36px;
+                        height:36px;
+                        background:#172554">
+                <i data-lucide="folder-open"
+                   style="width:18px;
+                          height:18px;
+                          color:#60A5FA"></i>
+            </div>
+            <div class="text-sm font-medium mb-1" style="color:#60A5FA;">Documents</div>
+            <div class="text-xs leading-relaxed" style="color:#78716C;">
+                Consultez et gérez tous les documents indexés dans votre registre.
+            </div>
+        </a>
     </div>
-    <div class="text-sm font-medium mb-1" style="color:#60A5FA;">Documents</div>
-    <div class="text-xs leading-relaxed" style="color:#78716C;">Consultez et gérez tous les documents indexés dans votre registre.</div>
-  </a>
-
-</div>
-
 {% endblock %}
