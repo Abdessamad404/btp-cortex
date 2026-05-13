@@ -211,14 +211,15 @@
     <!-- Main content -->
     <main class="flex-1 p-8 overflow-y-auto">
       <!-- Flash messages -->
-      {% with messages = get_flashed_messages() %} {% if messages %} {% for msg
-      in messages %}
-      <div
-        class="rounded px-4 py-3 mb-6 font-medium text-sm bg-success text-base"
-      >
-        {{ msg }}
-      </div>
-      {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          {% for msg in messages %}
+          showToast({{ msg | tojson }}, {{ "true" if "succès" in msg or "✅" in msg else "false" }});
+          {% endfor %}
+        });
+      </script>
+      {% endif %} {% endwith %} {% block content %}{% endblock %}
     </main>
     <script>
       async function loadConversations() {
@@ -265,6 +266,20 @@
         lucide.createIcons();
       }
       loadConversations();
+    </script>
+    <script>
+      function showToast(message, success = true) {
+        const toast = document.createElement("div");
+        toast.textContent = message;
+        toast.style.cssText = `position:fixed; top:24px; right:24px; background:${success ? "#22C55E" : "#EF4444"}; color:#1C1917; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:999; opacity:1; transition:opacity 0.5s ease; max-width:360px;`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = "0";
+        }, 2500);
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      }
     </script>
     <script>
       lucide.createIcons();

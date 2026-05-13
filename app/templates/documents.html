@@ -105,10 +105,14 @@
     const data = await res.json();
     if (data.status === "deleted") {
       btn.closest("tr").remove();
+      showFlash("Document supprimé avec succès.");
     } else {
       alert("Erreur : " + (data.error || "inconnue"));
       btn.disabled = false;
     }
+  }
+function showFlash(message) {
+    showToast(message, true);
   }
 </script>
 
