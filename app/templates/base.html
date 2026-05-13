@@ -24,8 +24,8 @@
 </head>
 <body class="min-h-screen flex bg-base text-content">
 
-  <!-- Sidebar -->
-  <aside class="flex-shrink-0 flex flex-col p-5 gap-6" style="width:220px; background:#292524;">
+<!-- Sidebar -->
+  <aside class="flex-shrink-0 flex flex-col p-5 gap-6" style="width:220px; background:#292524; height:100vh;">
 
     <!-- Logo -->
     <a href="/" style="display:flex; align-items:center; gap:10px; text-decoration:none; padding:4px 0;">
@@ -54,8 +54,25 @@
       </a>
     </nav>
 
-  </aside>
+    <!-- Divider -->
+    <div style="height:0.5px; background:#44403C;"></div>
 
+    <!-- Conversations -->
+    <div class="flex flex-col gap-2 flex-1 overflow-hidden">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:11px; font-weight:600; color:#78716C; text-transform:uppercase; letter-spacing:0.05em;">Conversations</span>
+        <a href="/chat" title="Nouvelle conversation"
+           style="width:22px; height:22px; display:flex; align-items:center; justify-content:center;
+                  background:#F97316; border-radius:5px; text-decoration:none;">
+          <i data-lucide="plus" style="width:13px; height:13px; color:#1C1917;"></i>
+        </a>
+      </div>
+
+      <!-- List populated by JS -->
+      <div id="conv-list" class="flex flex-col gap-1 overflow-y-auto" style="font-size:13px;"></div>
+    </div>
+
+  </aside>
   <!-- Main content -->
   <main class="flex-1 p-8 overflow-y-auto">
 
@@ -71,7 +88,29 @@
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
-
+  <script>
+      async function loadConversations() {
+        const res = await fetch("/api/conversations");
+        const conversations = await res.json();
+        const list = document.getElementById("conv-list");
+        if (!list) return;
+        list.innerHTML = "";
+        if (conversations.length === 0) {
+          list.innerHTML = `<span style="color:#57534E; font-size:12px; padding:4px 8px;">Aucune conversation</span>`;
+          return;
+        }
+        conversations.forEach(conv => {
+          const a = document.createElement("a");
+          a.href = `/chat?conv=${conv.id}`;
+          a.textContent = conv.title;
+          a.style.cssText = "display:block; padding:7px 10px; border-radius:7px; color:#A8A29E; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;";
+          a.onmouseenter = () => a.style.background = "#1C1917";
+          a.onmouseleave = () => a.style.background = "transparent";
+          list.appendChild(a);
+        });
+      }
+      loadConversations();
+    </script>
   <script>lucide.createIcons();</script>
 </body>
 </html>
