@@ -1,6 +1,6 @@
 import hashlib
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from app.extractors import extract_text
 from app.database import get_connection
 from config import UPLOAD_FOLDER
@@ -36,30 +36,8 @@ def ingest(
 
     # Step 2 — extract text
     text = extract_text(filepath)
-
-    # Step 3 — save metadata to SQLite
     filename = os.path.basename(filepath)
     file_type = os.path.splitext(filename)[1].lower().replace(".", "")
-    conn = get_connection()
-    conn.execute(
-        """
-        INSERT INTO documents
-          (filename, file_type, file_hash, projet, lot_technique, auteur, criticite, type_document)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """,
-        (
-            filename,
-            file_type,
-            file_hash,
-            projet,
-            lot_technique,
-            auteur,
-            criticite,
-            type_document or file_type,
-        ),
-    )
-    conn.commit()
-    conn.close()
 
     return {
         "status": "success",

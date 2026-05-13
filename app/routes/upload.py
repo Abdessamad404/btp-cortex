@@ -4,7 +4,7 @@ from app.chunker import chunk
 from app.embedder import embed
 from app.vector_store import upsert
 from config import UPLOAD_FOLDER
-from app.database import update_chunk_count
+from app.database import get_connection, update_chunk_count
 import os
 
 upload_bp = Blueprint("upload", __name__)
@@ -37,7 +37,6 @@ def upload():
         filepath = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(filepath)
 
-        # Run the full ingestion pipeline
         result = ingest(
             filepath,
             projet=projet,
@@ -51,12 +50,32 @@ def upload():
             flash("Ce fichier a déjà été ingéré.")
             return redirect(url_for("upload.upload"))
 
-        # Chunk → embed → store in Pinecone
+        # Chunk → embed → Pinecone
         chunks = chunk(result["text"])
         embeddings = embed(chunks)
         upsert(chunks, embeddings, result["meta"])
 
-        # Update chunk count in SQLite
+        # ✅ Only save to SQLite after Pinecone succeeds
+        meta = result["meta"]
+        conn = get_connection()
+        conn.execute(
+            """INSERT INTO documents
+               (filename, file_type, file_hash, projet, lot_technique, auteur, criticite, type_document)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                meta["filename"],
+                meta["file_type"],
+                result["file_hash"],
+                meta["projet"],
+                meta["lot_technique"],
+                meta["auteur"],
+                meta["criticite"],
+                meta["type_document"],
+            ),
+        )
+        conn.commit()
+        conn.close()
+
         update_chunk_count(result["file_hash"], len(chunks))
 
         flash(f"✅ {file.filename} ingéré avec succès — {len(chunks)} chunks indexés.")
