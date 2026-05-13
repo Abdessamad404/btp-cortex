@@ -6,6 +6,7 @@ from app.vector_store import upsert
 from config import UPLOAD_FOLDER
 from app.database import get_connection, update_chunk_count
 import os
+import json
 
 upload_bp = Blueprint("upload", __name__)
 
@@ -53,15 +54,15 @@ def upload():
         # Chunk → embed → Pinecone
         chunks = chunk(result["text"])
         embeddings = embed(chunks)
-        upsert(chunks, embeddings, result["meta"])
+        pinecone_ids = upsert(chunks, embeddings, result["meta"])
 
         # ✅ Only save to SQLite after Pinecone succeeds
         meta = result["meta"]
         conn = get_connection()
         conn.execute(
             """INSERT INTO documents
-               (filename, file_type, file_hash, projet, lot_technique, auteur, criticite, type_document)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+               (filename, file_type, file_hash, projet, lot_technique, auteur, criticite, type_document, pinecone_ids)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 meta["filename"],
                 meta["file_type"],
@@ -71,6 +72,7 @@ def upload():
                 meta["auteur"],
                 meta["criticite"],
                 meta["type_document"],
+                json.dumps(pinecone_ids),
             ),
         )
         conn.commit()

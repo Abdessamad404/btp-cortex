@@ -3,7 +3,7 @@
 <div
   id="chat-container"
   class="flex flex-col mx-auto"
-  style="max-width: 700px; height: calc(100vh - 80px)"
+  style="max-width: 900px; height: calc(100vh - 80px); overflow-x: hidden"
 >
   <!-- Centered empty state (shown when no messages) -->
   <div
@@ -75,7 +75,43 @@
     </div>
   </div>
 </div>
+<style>
+  #chat-box::-webkit-scrollbar {
+    width: 4px;
+  }
+  #chat-box::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #chat-box::-webkit-scrollbar-thumb {
+    background: #44403c;
+    border-radius: 999px;
+  }
+  #chat-box::-webkit-scrollbar-thumb:hover {
+    background: #78716c;
+  }
 
+  /* Also style tables inside bot responses */
+  #chat-box table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  #chat-box th,
+  #chat-box td {
+    padding: 8px 12px;
+    border: 0.5px solid #44403c;
+    text-align: left;
+  }
+  #chat-box th {
+    background: #1c1917;
+    color: #f97316;
+    font-weight: 600;
+  }
+  #chat-box .bot-bubble {
+    overflow-x: auto;
+  }
+</style>
 <script>
   const emptyState = document.getElementById("empty-state");
   const chatView = document.getElementById("chat-view");
@@ -187,7 +223,7 @@
       </div>`;
 
     const bubble = `
-      <div style="max-width:70%; background:${isUser ? "#F97316" : "#292524"};
+      <div class="${isUser ? "" : "bot-bubble"}" style="max-width:75%; background:${isUser ? "#F97316" : "#292524"};
                   color:${isUser ? "#1C1917" : "#F5F5F4"};
                   border:0.5px solid ${isUser ? "#F97316" : "#44403C"};
                   border-radius:12px;

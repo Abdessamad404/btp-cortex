@@ -1,6 +1,7 @@
 from flask import Flask
 from config import FLASK_SECRET_KEY, UPLOAD_FOLDER, DB_PATH
 import os
+from app.database import init_db
 
 
 def create_app():
@@ -12,8 +13,6 @@ def create_app():
     os.makedirs("data", exist_ok=True)
 
     # Initialize the database
-    from app.database import init_db
-
     init_db()
 
     # Register blueprints

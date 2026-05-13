@@ -32,6 +32,7 @@
           <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Chunks</th>
           <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Statut</th>
           <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Date</th>
+          <th class="text-left px-4 py-3 font-medium" style="color:#78716C;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -62,7 +63,18 @@
               <span class="rounded px-2 py-1 text-xs" style="background:#292524; color:#78716C;">En attente</span>
             {% endif %}
           </td>
-          <td class="px-4 py-3 text-xs" style="color:#78716C;">{{ doc['uploaded_at'][:10] }}</td>
+          <!-- more width for date -->
+          <td class="px-4 py-3 text-xs whitespace-nowrap font-medium" style="color:#78716C;">{{ doc['uploaded_at'][:10] }}</td>
+          <td class="px-4 py-3">
+            <button
+              onclick="deleteDocument({{ doc['id'] }}, this)"
+              style="background:transparent; border:none; cursor:pointer; color:#57534E; display:flex; align-items:center; padding:4px;"
+              onmouseenter="this.style.color='#EF4444'"
+              onmouseleave="this.style.color='#57534E'"
+              title="Supprimer">
+              <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+            </button>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -85,5 +97,19 @@
   {% endif %}
 
 </div>
+<script>
+  async function deleteDocument(id, btn) {
+    if (!confirm("Supprimer ce document ? Cette action est irréversible.")) return;
+    btn.disabled = true;
+    const res = await fetch(`/api/documents/${id}`, { method: "DELETE" });
+    const data = await res.json();
+    if (data.status === "deleted") {
+      btn.closest("tr").remove();
+    } else {
+      alert("Erreur : " + (data.error || "inconnue"));
+      btn.disabled = false;
+    }
+  }
+</script>
 
 {% endblock %}

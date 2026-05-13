@@ -25,6 +25,7 @@ def init_db():
             criticite     TEXT,
             type_document TEXT,
             chunk_count   INTEGER DEFAULT 0,
+            pinecone_ids  TEXT,
             uploaded_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             status        TEXT DEFAULT 'pending'
         )
