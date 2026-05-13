@@ -1,288 +1,155 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>btp-cortex</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#F97316",
-              surface: "#292524",
-              base: "#1C1917",
-              content: "#F5F5F4",
-              success: "#22C55E",
-            },
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>btp-cortex</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#F97316",
+            surface: "#292524",
+            base:    "#1C1917",
+            content: "#F5F5F4",
+            success: "#22C55E",
           },
         },
-      };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  </head>
-  <body class="min-h-screen flex bg-base text-content">
-    <!-- Sidebar -->
-    <aside
-      class="flex-shrink-0 flex flex-col p-5 gap-6"
-      style="width: 220px; background: #292524; height: 100vh"
-    >
-      <!-- Logo -->
-      <a
-        href="/"
-        style="
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-          padding: 4px 0;
-        "
-      >
-        <div
-          style="
-            width: 30px;
-            height: 30px;
-            background: #f97316;
-            border-radius: 7px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-          "
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M2 20h20M4 20V10l8-6 8 6v10" />
-            <rect x="9" y="14" width="6" height="6" />
-          </svg>
-        </div>
-        <span
-          style="
-            font-size: 15px;
-            font-weight: 600;
-            color: #f5f5f4;
-            letter-spacing: -0.3px;
-          "
-          >btp<span style="color: #f97316; font-weight: 700">cortex</span></span
-        >
-      </a>
+      },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body class="min-h-screen flex bg-base text-content">
 
-      <!-- Nav -->
-      <nav class="flex flex-col gap-1 text-sm">
-        <a
-          href="/"
-          style="
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 12px;
-            border-radius: 8px;
-            color: #a8a29e;
-            text-decoration: none;
-          "
-          class="hover:bg-base hover:text-content transition-colors"
-        >
-          <i
-            data-lucide="home"
-            style="width: 16px; height: 16px; flex-shrink: 0"
-          ></i>
-          Accueil
-        </a>
-        <a
-          href="/upload"
-          style="
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 12px;
-            border-radius: 8px;
-            color: #a8a29e;
-            text-decoration: none;
-          "
-          class="hover:bg-base hover:text-content transition-colors"
-        >
-          <i
-            data-lucide="upload-cloud"
-            style="width: 16px; height: 16px; flex-shrink: 0"
-          ></i>
-          Upload
-        </a>
-        <a
-          href="/chat"
-          style="
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 12px;
-            border-radius: 8px;
-            color: #a8a29e;
-            text-decoration: none;
-          "
-          class="hover:bg-base hover:text-content transition-colors"
-        >
-          <i
-            data-lucide="message-circle"
-            style="width: 16px; height: 16px; flex-shrink: 0"
-          ></i>
-          Chat
-        </a>
-        <a
-          href="/documents"
-          style="
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 12px;
-            border-radius: 8px;
-            color: #a8a29e;
-            text-decoration: none;
-          "
-          class="hover:bg-base hover:text-content transition-colors"
-        >
-          <i
-            data-lucide="folder-open"
-            style="width: 16px; height: 16px; flex-shrink: 0"
-          ></i>
-          Documents
-        </a>
-      </nav>
+  <!-- Sidebar -->
+  <aside class="flex-shrink-0 flex flex-col p-5 gap-6" style="width:220px; background:#292524; height:100vh;">
 
-      <!-- Divider -->
-      <div style="height: 0.5px; background: #44403c"></div>
-
-      <!-- Conversations -->
-      <div class="flex flex-col gap-2 flex-1 overflow-hidden">
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          "
-        >
-          <span
-            style="
-              font-size: 11px;
-              font-weight: 600;
-              color: #78716c;
-              text-transform: uppercase;
-              letter-spacing: 0.05em;
-            "
-            >Conversations</span
-          >
-          <a
-            href="/chat"
-            title="Nouvelle conversation"
-            style="
-              width: 22px;
-              height: 22px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              background: #f97316;
-              border-radius: 5px;
-              text-decoration: none;
-            "
-          >
-            <i
-              data-lucide="plus"
-              style="width: 13px; height: 13px; color: #1c1917"
-            ></i>
-          </a>
-        </div>
-
-        <!-- List populated by JS -->
-        <div
-          id="conv-list"
-          class="flex flex-col gap-1 overflow-y-auto"
-          style="font-size: 13px"
-        ></div>
+    <!-- Logo -->
+    <a href="/" style="display:flex; align-items:center; gap:10px; text-decoration:none; padding:4px 0;">
+      <div style="width:30px; height:30px; background:#F97316; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 20h20M4 20V10l8-6 8 6v10" />
+          <rect x="9" y="14" width="6" height="6" />
+        </svg>
       </div>
-    </aside>
-    <!-- Main content -->
-    <main class="flex-1 p-8 overflow-y-auto">
-      <!-- Flash messages -->
-      {% with messages = get_flashed_messages() %} {% if messages %}
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          {% for msg in messages %}
-          showToast({{ msg | tojson }}, {{ "true" if "succès" in msg or "✅" in msg else "false" }});
-          {% endfor %}
-        });
-      </script>
-      {% endif %} {% endwith %} {% block content %}{% endblock %}
-    </main>
-    <script>
-      async function loadConversations() {
-        const res = await fetch("/api/conversations");
-        const conversations = await res.json();
-        const list = document.getElementById("conv-list");
-        if (!list) return;
-        list.innerHTML = "";
-        if (conversations.length === 0) {
-          list.innerHTML = `<span style="color:#57534E; font-size:12px; padding:4px 8px;">Aucune conversation</span>`;
-          return;
-        }
-        conversations.forEach(conv => {
-          const wrapper = document.createElement("div");
-          wrapper.style.cssText =
-            "display:flex; align-items:center; border-radius:7px; overflow:hidden;";
-          wrapper.onmouseenter = () => (wrapper.style.background = "#1C1917");
-          wrapper.onmouseleave = () =>
-            (wrapper.style.background = "transparent");
+      <span style="font-size:15px; font-weight:600; color:#F5F5F4; letter-spacing:-0.3px;">
+        btp<span style="color:#F97316; font-weight:700;">cortex</span>
+      </span>
+    </a>
 
-          const a = document.createElement("a");
-          a.href = `/chat?conv=${conv.id}`;
-          a.textContent = conv.title;
-          a.style.cssText =
-            "flex:1; padding:7px 10px; color:#A8A29E; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:13px;";
+    <!-- Nav -->
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="/" class="hover:bg-base hover:text-content transition-colors"
+         style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; color:#A8A29E; text-decoration:none;">
+        <i data-lucide="home" style="width:16px; height:16px; flex-shrink:0;"></i> Accueil
+      </a>
+      <a href="/upload" class="hover:bg-base hover:text-content transition-colors"
+         style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; color:#A8A29E; text-decoration:none;">
+        <i data-lucide="upload-cloud" style="width:16px; height:16px; flex-shrink:0;"></i> Upload
+      </a>
+      <a href="/chat" class="hover:bg-base hover:text-content transition-colors"
+         style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; color:#A8A29E; text-decoration:none;">
+        <i data-lucide="message-circle" style="width:16px; height:16px; flex-shrink:0;"></i> Chat
+      </a>
+      <a href="/documents" class="hover:bg-base hover:text-content transition-colors"
+         style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; color:#A8A29E; text-decoration:none;">
+        <i data-lucide="folder-open" style="width:16px; height:16px; flex-shrink:0;"></i> Documents
+      </a>
+    </nav>
 
-          const btn = document.createElement("button");
-          btn.title = "Supprimer";
-          btn.innerHTML = `<i data-lucide="trash-2" style="width:12px; height:12px;"></i>`;
-          btn.style.cssText =
-            "padding:7px 8px; background:transparent; border:none; color:#57534E; cursor:pointer; display:flex; align-items:center; flex-shrink:0;";
-          btn.onmouseenter = () => (btn.style.color = "#EF4444");
-          btn.onmouseleave = () => (btn.style.color = "#57534E");
-          btn.onclick = async e => {
-            e.preventDefault();
-            await fetch(`/api/conversations/${conv.id}`, { method: "DELETE" });
-            loadConversations();
-          };
+    <!-- Divider -->
+    <div style="height:0.5px; background:#44403C;"></div>
 
-          wrapper.appendChild(a);
-          wrapper.appendChild(btn);
-          list.appendChild(wrapper);
-        });
-        lucide.createIcons();
+    <!-- Conversations -->
+    <div class="flex flex-col gap-2 flex-1 overflow-hidden">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:11px; font-weight:600; color:#78716C; text-transform:uppercase; letter-spacing:0.05em;">Conversations</span>
+        <a href="/chat" title="Nouvelle conversation"
+           style="width:22px; height:22px; display:flex; align-items:center; justify-content:center; background:#F97316; border-radius:5px; text-decoration:none;">
+          <i data-lucide="plus" style="width:13px; height:13px; color:#1C1917;"></i>
+        </a>
+      </div>
+      <div id="conv-list" class="flex flex-col gap-1 overflow-y-auto" style="font-size:13px;"></div>
+    </div>
+
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    // ── Toast notifications ───────────────────────────────────────────────────
+    function showToast(message, success = true) {
+      const toast = document.createElement("div");
+      toast.textContent = message;
+      toast.style.cssText = `position:fixed; top:24px; right:24px; background:${success ? "#22C55E" : "#EF4444"}; color:#1C1917; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:999; opacity:1; transition:opacity 0.5s ease; max-width:360px;`;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = "0"; }, 2500);
+      setTimeout(() => { toast.remove(); }, 3000);
+    }
+
+    // ── Flash messages from Flask (show as toasts on page load) ──────────────
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    document.addEventListener("DOMContentLoaded", function () {
+      {% for msg in messages %}
+      showToast({{ msg | tojson }}, {{ "true" if "succès" in msg or "✅" in msg else "false" }});
+      {% endfor %}
+    });
+    {% endif %}
+    {% endwith %}
+
+    // ── Sidebar conversations ─────────────────────────────────────────────────
+    async function loadConversations() {
+      const res = await fetch("/api/conversations");
+      const conversations = await res.json();
+      const list = document.getElementById("conv-list");
+      if (!list) return;
+      list.innerHTML = "";
+      if (conversations.length === 0) {
+        list.innerHTML = `<span style="color:#57534E; font-size:12px; padding:4px 8px;">Aucune conversation</span>`;
+        return;
       }
-      loadConversations();
-    </script>
-    <script>
-      function showToast(message, success = true) {
-        const toast = document.createElement("div");
-        toast.textContent = message;
-        toast.style.cssText = `position:fixed; top:24px; right:24px; background:${success ? "#22C55E" : "#EF4444"}; color:#1C1917; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:999; opacity:1; transition:opacity 0.5s ease; max-width:360px;`;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-          toast.style.opacity = "0";
-        }, 2500);
-        setTimeout(() => {
-          toast.remove();
-        }, 3000);
-      }
-    </script>
-    <script>
+      conversations.forEach(conv => {
+        const wrapper = document.createElement("div");
+        wrapper.style.cssText = "display:flex; align-items:center; border-radius:7px; overflow:hidden;";
+        wrapper.onmouseenter = () => (wrapper.style.background = "#1C1917");
+        wrapper.onmouseleave = () => (wrapper.style.background = "transparent");
+
+        const a = document.createElement("a");
+        a.href = `/chat?conv=${conv.id}`;
+        a.textContent = conv.title;
+        a.style.cssText = "flex:1; padding:7px 10px; color:#A8A29E; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:13px;";
+
+        const btn = document.createElement("button");
+        btn.title = "Supprimer";
+        btn.innerHTML = `<i data-lucide="trash-2" style="width:12px; height:12px;"></i>`;
+        btn.style.cssText = "padding:7px 8px; background:transparent; border:none; color:#57534E; cursor:pointer; display:flex; align-items:center; flex-shrink:0;";
+        btn.onmouseenter = () => (btn.style.color = "#EF4444");
+        btn.onmouseleave = () => (btn.style.color = "#57534E");
+        btn.onclick = async e => {
+          e.preventDefault();
+          await fetch(`/api/conversations/${conv.id}`, { method: "DELETE" });
+          loadConversations();
+        };
+
+        wrapper.appendChild(a);
+        wrapper.appendChild(btn);
+        list.appendChild(wrapper);
+      });
       lucide.createIcons();
-    </script>
-  </body>
+    }
+    loadConversations();
+
+    // ── Lucide icons ──────────────────────────────────────────────────────────
+    lucide.createIcons();
+  </script>
+
+</body>
 </html>

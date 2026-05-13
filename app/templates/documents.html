@@ -10,9 +10,8 @@
       <h1 class="text-2xl font-medium mb-1" style="color:#F5F5F4;">Documents indexés</h1>
       <p class="text-sm" style="color:#78716C;">Tous les fichiers ingérés dans votre base de connaissances.</p>
     </div>
-    <a href="/upload"
-       class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
-       style="background:#F97316; color:#1C1917; text-decoration:none;">
+    <a href="/upload" style="background:#F97316; color:#1C1917; text-decoration:none;"
+       class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90">
       <i data-lucide="plus" style="width:14px; height:14px;"></i>
       Ajouter
     </a>
@@ -40,9 +39,7 @@
         <tr style="border-bottom:0.5px solid #44403C;" class="hover:bg-surface transition-colors">
           <td class="px-4 py-3 font-medium" style="color:#F5F5F4;">{{ doc['filename'] }}</td>
           <td class="px-4 py-3">
-            <span class="rounded px-2 py-1 text-xs uppercase" style="background:#1C1917; color:#A8A29E;">
-              {{ doc['file_type'] }}
-            </span>
+            <span class="rounded px-2 py-1 text-xs uppercase" style="background:#1C1917; color:#A8A29E;">{{ doc['file_type'] }}</span>
           </td>
           <td class="px-4 py-3" style="color:#A8A29E;">{{ doc['projet'] or '—' }}</td>
           <td class="px-4 py-3" style="color:#A8A29E;">{{ doc['auteur'] or '—' }}</td>
@@ -63,15 +60,11 @@
               <span class="rounded px-2 py-1 text-xs" style="background:#292524; color:#78716C;">En attente</span>
             {% endif %}
           </td>
-          <!-- more width for date -->
           <td class="px-4 py-3 text-xs whitespace-nowrap font-medium" style="color:#78716C;">{{ doc['uploaded_at'][:10] }}</td>
           <td class="px-4 py-3">
-            <button
-              onclick="deleteDocument({{ doc['id'] }}, this)"
-              style="background:transparent; border:none; cursor:pointer; color:#57534E; display:flex; align-items:center; padding:4px;"
-              onmouseenter="this.style.color='#EF4444'"
-              onmouseleave="this.style.color='#57534E'"
-              title="Supprimer">
+            <button onclick="deleteDocument({{ doc['id'] }}, this)" title="Supprimer"
+                    onmouseenter="this.style.color='#EF4444'" onmouseleave="this.style.color='#57534E'"
+                    style="background:transparent; border:none; cursor:pointer; color:#57534E; display:flex; align-items:center; padding:4px;">
               <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
             </button>
           </td>
@@ -88,15 +81,15 @@
     <i data-lucide="inbox" style="width:40px; height:40px; color:#44403C; margin-bottom:16px;"></i>
     <p class="text-sm font-medium mb-1" style="color:#78716C;">Aucun document indexé</p>
     <p class="text-xs mb-4" style="color:#44403C;">Importez votre premier fichier pour commencer.</p>
-    <a href="/upload"
-       class="rounded-lg px-4 py-2 text-sm font-semibold transition-all hover:opacity-90"
-       style="background:#F97316; color:#1C1917; text-decoration:none;">
+    <a href="/upload" style="background:#F97316; color:#1C1917; text-decoration:none;"
+       class="rounded-lg px-4 py-2 text-sm font-semibold transition-all hover:opacity-90">
       Importer un fichier
     </a>
   </div>
   {% endif %}
 
 </div>
+
 <script>
   async function deleteDocument(id, btn) {
     if (!confirm("Supprimer ce document ? Cette action est irréversible.")) return;
@@ -105,14 +98,11 @@
     const data = await res.json();
     if (data.status === "deleted") {
       btn.closest("tr").remove();
-      showFlash("Document supprimé avec succès.");
+      showToast("Document supprimé avec succès.", true);
     } else {
-      alert("Erreur : " + (data.error || "inconnue"));
+      showToast("Erreur : " + (data.error || "inconnue"), false);
       btn.disabled = false;
     }
-  }
-function showFlash(message) {
-    showToast(message, true);
   }
 </script>
 
