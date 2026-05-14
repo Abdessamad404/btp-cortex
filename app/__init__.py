@@ -21,11 +21,13 @@ def create_app():
     from app.routes.documents import docs_bp
     from app.routes.home import home_bp
     from app.routes.conversations import conversations_bp
+    from app.routes.connectors import connectors_bp
 
     app.register_blueprint(upload_bp)
     app.register_blueprint(chat_bp)
     app.register_blueprint(docs_bp)
     app.register_blueprint(home_bp)
     app.register_blueprint(conversations_bp)
+    app.register_blueprint(connectors_bp)
 
     return app

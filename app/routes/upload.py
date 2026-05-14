@@ -10,7 +10,7 @@ import json
 
 upload_bp = Blueprint("upload", __name__)
 
-# File types we accept
+# File types accepted on the manual upload page
 ALLOWED = {".pdf", ".docx", ".txt", ".eml", ".csv", ".xlsx"}
 
 
@@ -24,20 +24,22 @@ def upload():
         criticite = request.form.get("criticite", "normale")
         type_document = request.form.get("type_document", None)
 
-        # Validate file
+        # Validate file presence
         if not file or file.filename == "":
             flash("Aucun fichier sélectionné.")
             return redirect(url_for("upload.upload"))
 
+        # Validate file extension
         ext = os.path.splitext(file.filename)[1].lower()
         if ext not in ALLOWED:
             flash(f"Type de fichier non supporté : {ext}")
             return redirect(url_for("upload.upload"))
 
-        # Save file to disk
+        # Save file to disk before processing
         filepath = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(filepath)
 
+        # Deduplicate + extract text
         result = ingest(
             filepath,
             projet=projet,
@@ -51,18 +53,19 @@ def upload():
             flash("Ce fichier a déjà été ingéré.")
             return redirect(url_for("upload.upload"))
 
-        # Chunk → embed → Pinecone
+        # Chunk → embed → upsert to Pinecone
         chunks = chunk(result["text"])
         embeddings = embed(chunks)
         pinecone_ids = upsert(chunks, embeddings, result["meta"])
 
-        # ✅ Only save to SQLite after Pinecone succeeds
+        # Only commit to SQLite after Pinecone succeeds — prevents ghost records
         meta = result["meta"]
         conn = get_connection()
         conn.execute(
             """INSERT INTO documents
-               (filename, file_type, file_hash, projet, lot_technique, auteur, criticite, type_document, pinecone_ids)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               (filename, file_type, file_hash, projet, lot_technique, auteur,
+                criticite, type_document, pinecone_ids, source_type)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 meta["filename"],
                 meta["file_type"],
@@ -73,6 +76,7 @@ def upload():
                 meta["criticite"],
                 meta["type_document"],
                 json.dumps(pinecone_ids),
+                "upload",  # source_type for manual uploads
             ),
         )
         conn.commit()

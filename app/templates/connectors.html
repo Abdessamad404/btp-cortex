@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-2xl font-medium mb-1" style="color:#F5F5F4;">Connecteurs</h1>
+        <p class="text-sm" style="color:#78716C;">
+            Importez vos données depuis vos sources internes vers la base vectorielle.
+        </p>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid grid-cols-1 gap-6">
+
+        <!-- ── WhatsApp Card ──────────────────────────────────────────────── -->
+        <div class="rounded-xl p-6" style="background:#292524; border:0.5px solid #44403C;">
+
+            <!-- Card header -->
+            <div class="flex items-center gap-3 mb-5">
+                <div style="width:38px; height:38px; background:#1C1917; border-radius:9px;
+                            display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i data-lucide="message-square" style="width:18px; height:18px; color:#25D366;"></i>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-sm" style="color:#F5F5F4;">WhatsApp</h2>
+                    <p class="text-xs" style="color:#78716C;">
+                        Remontées terrain · Décisions de chantier · Échanges d'équipe
+                    </p>
+                </div>
+                <span class="ml-auto text-xs px-2 py-1 rounded"
+                      style="background:#1C1917; color:#78716C;">Export .txt</span>
+            </div>
+
+            <!-- How to export instructions -->
+            <div class="rounded-lg px-4 py-3 mb-5 text-xs" style="background:#1C1917; color:#A8A29E; line-height:1.7;">
+                <span style="color:#F97316; font-weight:600;">Comment exporter ?</span>
+                WhatsApp → Conversation → ⋮ → Plus → Exporter la discussion → Sans médias → Enregistrer le fichier .txt
+            </div>
+
+            <!-- WhatsApp form -->
+            <form method="POST" action="/connectors/whatsapp" enctype="multipart/form-data"
+                  class="flex flex-col gap-4">
+
+                <!-- File drop zone -->
+                <div class="rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 p-6 cursor-pointer"
+                     style="border-color:#44403C;"
+                     onclick="document.getElementById('wa-file').click()">
+                    <i data-lucide="upload-cloud" style="width:24px; height:24px; color:#F97316;"></i>
+                    <p class="text-sm" style="color:#F5F5F4;">Cliquez pour choisir le fichier .txt</p>
+                    <p class="text-xs font-medium" id="wa-label" style="color:#F97316;"></p>
+                </div>
+                <input type="file" id="wa-file" name="file" accept=".txt" class="hidden"
+                       onchange="document.getElementById('wa-label').textContent = this.files[0]?.name || ''">
+
+                <!-- Metadata -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Projet</label>
+                        <input type="text" name="projet" placeholder="ex: Résidence Oran"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Auteur / Groupe</label>
+                        <input type="text" name="auteur" placeholder="ex: Équipe Gros Œuvre"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Lot technique</label>
+                        <input type="text" name="lot_technique" placeholder="ex: Gros-oeuvre"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Criticité</label>
+                        <select name="criticite" class="rounded-lg px-3 py-2 text-sm outline-none"
+                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                            <option value="normale">Normale</option>
+                            <option value="haute">Haute</option>
+                            <option value="critique">Critique</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="rounded-lg px-4 py-3 text-sm font-semibold transition-all hover:opacity-90"
+                        style="background:#F97316; color:#1C1917;">
+                    Ingérer la conversation
+                </button>
+            </form>
+        </div>
+
+        <!-- ── Email IMAP Card ────────────────────────────────────────────── -->
+        <div class="rounded-xl p-6" style="background:#292524; border:0.5px solid #44403C;">
+
+            <!-- Card header -->
+            <div class="flex items-center gap-3 mb-5">
+                <div style="width:38px; height:38px; background:#1C1917; border-radius:9px;
+                            display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i data-lucide="mail" style="width:18px; height:18px; color:#6366F1;"></i>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-sm" style="color:#F5F5F4;">Email (IMAP)</h2>
+                    <p class="text-xs" style="color:#78716C;">
+                        Décisions · Validations · Échanges contractuels
+                    </p>
+                </div>
+                <span class="ml-auto text-xs px-2 py-1 rounded"
+                      style="background:#1C1917; color:#78716C;">Gmail · Outlook · SMTP</span>
+            </div>
+
+            <!-- Security note -->
+            <div class="rounded-lg px-4 py-3 mb-5 text-xs flex gap-2"
+                 style="background:#1C1917; color:#A8A29E; line-height:1.7;">
+                <i data-lucide="shield-check" style="width:14px; height:14px; color:#22C55E; flex-shrink:0; margin-top:2px;"></i>
+                <span>
+                    Vos identifiants ne sont jamais stockés — ils sont utilisés uniquement
+                    pour cette récupération, puis oubliés immédiatement.
+                </span>
+            </div>
+
+            <!-- Email form -->
+            <form method="POST" action="/connectors/email" class="flex flex-col gap-4">
+
+                <!-- IMAP credentials -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
+                            Serveur IMAP
+                        </label>
+                        <input type="text" name="host" placeholder="imap.gmail.com"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
+                            Port SSL
+                        </label>
+                        <input type="number" name="port" value="993"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
+                            Adresse email
+                        </label>
+                        <input type="email" name="username" placeholder="vous@gmail.com"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
+                            Mot de passe / App password
+                        </label>
+                        <input type="password" name="password" placeholder="••••••••••••"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
+                            Dossier
+                        </label>
+                        <input type="text" name="folder" value="INBOX"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
+                            Nb d'emails max
+                        </label>
+                        <input type="number" name="max_emails" value="50" min="1" max="500"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div style="height:0.5px; background:#44403C;"></div>
+
+                <!-- BTP Metadata -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Projet</label>
+                        <input type="text" name="projet" placeholder="ex: Résidence Oran"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Lot technique</label>
+                        <input type="text" name="lot_technique" placeholder="ex: Structure"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1 col-span-2">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Criticité</label>
+                        <select name="criticite" class="rounded-lg px-3 py-2 text-sm outline-none"
+                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                            <option value="normale">Normale</option>
+                            <option value="haute">Haute</option>
+                            <option value="critique">Critique</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="rounded-lg px-4 py-3 text-sm font-semibold transition-all hover:opacity-90"
+                        style="background:#F97316; color:#1C1917;">
+                    Récupérer et indexer les emails
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -4,15 +4,20 @@ from config import DB_PATH
 
 
 def get_connection():
+    """Open a SQLite connection with Row factory and foreign key enforcement."""
     conn = sqlite3.connect(DB_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON")  # enforce cascade deletes
+    conn.execute("PRAGMA foreign_keys = ON")  # required for ON DELETE CASCADE to work
     return conn
 
 
 def init_db():
+    """Create all tables if they don't already exist."""
     os.makedirs("data", exist_ok=True)
     conn = get_connection()
+
+    # ── Documents ─────────────────────────────────────────────────────────────
+    # source_type tracks where the document came from: 'upload', 'whatsapp', 'email'
     conn.execute("""
         CREATE TABLE IF NOT EXISTS documents (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,10 +31,13 @@ def init_db():
             type_document TEXT,
             chunk_count   INTEGER DEFAULT 0,
             pinecone_ids  TEXT,
+            source_type   TEXT DEFAULT 'upload',
             uploaded_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             status        TEXT DEFAULT 'pending'
         )
     """)
+
+    # ── Conversations ─────────────────────────────────────────────────────────
     conn.execute("""
         CREATE TABLE IF NOT EXISTS conversations (
             id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,6 +45,9 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
+    # ── Messages ──────────────────────────────────────────────────────────────
+    # ON DELETE CASCADE: deleting a conversation auto-deletes its messages
     conn.execute("""
         CREATE TABLE IF NOT EXISTS messages (
             id              INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,12 +58,13 @@ def init_db():
             FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
         )
     """)
+
     conn.commit()
     conn.close()
 
 
 def update_chunk_count(file_hash: str, count: int):
-    """Update chunk_count for a document after chunking is done."""
+    """Mark a document as processed and store how many chunks were created."""
     conn = get_connection()
     conn.execute(
         "UPDATE documents SET chunk_count = ?, status = 'processed' WHERE file_hash = ?",
