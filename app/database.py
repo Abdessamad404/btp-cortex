@@ -59,6 +59,26 @@ def init_db():
         )
     """)
 
+    # ── Email schedules ───────────────────────────────────────────────────────
+    # Stores recurring IMAP polling configurations.
+    # Each row = one email account polled automatically every interval_hours.
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS email_schedules (
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            host           TEXT NOT NULL,
+            port           INTEGER DEFAULT 993,
+            username       TEXT NOT NULL,
+            password       TEXT NOT NULL,
+            folder         TEXT DEFAULT 'INBOX',
+            max_emails     INTEGER DEFAULT 50,
+            projet         TEXT DEFAULT 'general',
+            lot_technique  TEXT DEFAULT 'unknown',
+            criticite      TEXT DEFAULT 'normale',
+            interval_hours INTEGER DEFAULT 6,
+            created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     conn.commit()
     conn.close()
 

@@ -30,4 +30,11 @@ def create_app():
     app.register_blueprint(conversations_bp)
     app.register_blueprint(connectors_bp)
 
+    # Start the background email polling scheduler.
+    # Only runs in the main process — not in the Werkzeug reloader watcher process,
+    # which would cause the scheduler (and its jobs) to start twice in debug mode.
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or not app.debug:
+        from app.scheduler import init_scheduler
+        init_scheduler(app)
+
     return app

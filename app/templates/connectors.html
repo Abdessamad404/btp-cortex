@@ -112,75 +112,49 @@
                       style="background:#1C1917; color:#78716C;">Gmail · Outlook · SMTP</span>
             </div>
 
-            <!-- Security note -->
-            <div class="rounded-lg px-4 py-3 mb-5 text-xs flex gap-2"
-                 style="background:#1C1917; color:#A8A29E; line-height:1.7;">
-                <i data-lucide="shield-check" style="width:14px; height:14px; color:#22C55E; flex-shrink:0; margin-top:2px;"></i>
-                <span>
-                    Vos identifiants ne sont jamais stockés — ils sont utilisés uniquement
-                    pour cette récupération, puis oubliés immédiatement.
-                </span>
-            </div>
+            <!-- ── Manuel (one-shot fetch) ── -->
+            <p class="text-xs font-semibold mb-3" style="color:#78716C; text-transform:uppercase; letter-spacing:0.05em;">Import manuel</p>
 
-            <!-- Email form -->
             <form method="POST" action="/connectors/email" class="flex flex-col gap-4">
-
-                <!-- IMAP credentials -->
                 <div class="grid grid-cols-2 gap-3">
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
-                            Serveur IMAP
-                        </label>
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Serveur IMAP</label>
                         <input type="text" name="host" placeholder="imap.gmail.com"
                                class="rounded-lg px-3 py-2 text-sm outline-none"
                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
-                            Port SSL
-                        </label>
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Port SSL</label>
                         <input type="number" name="port" value="993"
                                class="rounded-lg px-3 py-2 text-sm outline-none"
                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
-                            Adresse email
-                        </label>
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Adresse email</label>
                         <input type="email" name="username" placeholder="vous@gmail.com"
                                class="rounded-lg px-3 py-2 text-sm outline-none"
                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
-                            Mot de passe / App password
-                        </label>
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Mot de passe / App password</label>
                         <input type="password" name="password" placeholder="••••••••••••"
                                class="rounded-lg px-3 py-2 text-sm outline-none"
                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
-                            Dossier
-                        </label>
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Dossier</label>
                         <input type="text" name="folder" value="INBOX"
                                class="rounded-lg px-3 py-2 text-sm outline-none"
                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
-                            Nb d'emails max
-                        </label>
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Nb d'emails max</label>
                         <input type="number" name="max_emails" value="50" min="1" max="500"
                                class="rounded-lg px-3 py-2 text-sm outline-none"
                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                     </div>
                 </div>
-
-                <!-- Divider -->
                 <div style="height:0.5px; background:#44403C;"></div>
-
-                <!-- BTP Metadata -->
                 <div class="grid grid-cols-2 gap-3">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Projet</label>
@@ -204,16 +178,102 @@
                         </select>
                     </div>
                 </div>
-
                 <button type="submit"
                         class="rounded-lg px-4 py-3 text-sm font-semibold transition-all hover:opacity-90"
                         style="background:#F97316; color:#1C1917;">
                     Récupérer et indexer les emails
                 </button>
             </form>
+
+            <!-- ── Polling automatique ── -->
+            <div style="height:0.5px; background:#44403C; margin:28px 0;"></div>
+
+            <p class="text-xs font-semibold mb-1" style="color:#78716C; text-transform:uppercase; letter-spacing:0.05em;">Polling automatique</p>
+            <p class="text-xs mb-4" style="color:#57534E;">
+                Configurez une boîte à surveiller — les nouveaux emails seront indexés automatiquement à intervalle régulier.
+            </p>
+
+            <form method="POST" action="/connectors/email/schedule" class="flex flex-col gap-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Serveur IMAP</label>
+                        <input type="text" name="host" placeholder="imap.gmail.com"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Port SSL</label>
+                        <input type="number" name="port" value="993"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Adresse email</label>
+                        <input type="email" name="username" placeholder="vous@gmail.com"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Mot de passe / App password</label>
+                        <input type="password" name="password" placeholder="••••••••••••"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Dossier</label>
+                        <input type="text" name="folder" value="INBOX"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Fréquence</label>
+                        <select name="interval_hours" class="rounded-lg px-3 py-2 text-sm outline-none"
+                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                            <option value="1">Toutes les heures</option>
+                            <option value="3">Toutes les 3h</option>
+                            <option value="6" selected>Toutes les 6h</option>
+                            <option value="12">Toutes les 12h</option>
+                            <option value="24">Une fois par jour</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="height:0.5px; background:#44403C;"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Projet</label>
+                        <input type="text" name="projet" placeholder="ex: Résidence Oran"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Lot technique</label>
+                        <input type="text" name="lot_technique" placeholder="ex: Structure"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1 col-span-2">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Criticité</label>
+                        <select name="criticite" class="rounded-lg px-3 py-2 text-sm outline-none"
+                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                            <option value="normale">Normale</option>
+                            <option value="haute">Haute</option>
+                            <option value="critique">Critique</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit"
+                        class="rounded-lg px-4 py-3 text-sm font-semibold transition-all hover:opacity-90"
+                        style="background:#292524; color:#F5F5F4; border:0.5px solid #44403C;">
+                    Activer le polling
+                </button>
+            </form>
+
+            <!-- Active schedules list -->
+            <div id="schedule-list" class="flex flex-col gap-2 mt-4"></div>
+
         </div>
 
-        <!-- ── Photos de chantier ────────────────────────────────────────────── -->
+        <!-- ── Photos de chantier ─────────────────────────────────────────── -->
         <div class="rounded-xl p-6" style="background:#292524; border:0.5px solid #44403C;">
 
             <!-- Card header -->
@@ -237,60 +297,75 @@
                  style="background:#1C1917; color:#A8A29E; line-height:1.7;">
                 <i data-lucide="sparkles" style="width:14px; height:14px; color:#F97316; flex-shrink:0; margin-top:2px;"></i>
                 <span>
-                    La photo est envoyée à un modèle de vision IA qui génère une description
-                    textuelle détaillée (type de travaux, avancement, anomalies visibles).
-                    Ce texte est ensuite indexé dans la base vectorielle et interrogeable via le chat.
+                    Chaque photo est analysée par un modèle de vision IA qui génère une description
+                    textuelle détaillée. Sélectionnez plusieurs photos pour les traiter en lot.
                 </span>
             </div>
 
-            <!-- Photo form -->
-            <form method="POST" action="/connectors/photo" enctype="multipart/form-data"
-                  class="flex flex-col gap-4">
+            <!-- Photo form — JS intercepts submit, sends each photo via fetch() -->
+            <form onsubmit="submitPhotos(event)" class="flex flex-col gap-4">
 
-                <!-- Image drop zone with preview -->
-                <div class="rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 p-6 cursor-pointer"
-                     style="border-color:#44403C; min-height:120px;"
+                <!-- Drop zone with thumbnail grid -->
+                <div class="rounded-lg border-2 border-dashed cursor-pointer"
+                     style="border-color:#44403C;"
                      onclick="document.getElementById('photo-file').click()">
-                    <img id="photo-preview"
-                         src=""
-                         alt=""
-                         style="display:none; max-height:160px; border-radius:8px; object-fit:cover; margin-bottom:8px;">
-                    <i data-lucide="image-plus" id="photo-icon" style="width:28px; height:28px; color:#F97316;"></i>
-                    <p class="text-sm" id="photo-label-main" style="color:#F5F5F4;">Cliquez pour choisir une photo</p>
-                    <p class="text-xs" id="photo-label-name" style="color:#F97316;"></p>
-                </div>
-                <input type="file" id="photo-file" name="file" accept=".jpg,.jpeg,.png" class="hidden"
-                       onchange="handlePhotoSelect(this)">
 
-                <!-- Optional context hint -->
+                    <!-- Hint shown before any selection -->
+                    <div id="photo-drop-hint" class="flex flex-col items-center justify-center gap-2 p-6">
+                        <i data-lucide="images" style="width:28px; height:28px; color:#F97316;"></i>
+                        <p class="text-sm" style="color:#F5F5F4;">Cliquez pour choisir une ou plusieurs photos</p>
+                        <p class="text-xs" style="color:#78716C;">JPG, PNG — sélection multiple autorisée</p>
+                    </div>
+
+                    <!-- Grid shown after selection -->
+                    <div id="photo-grid-container" style="display:none; padding:12px;">
+                        <div id="photo-grid"
+                             style="display:grid; grid-template-columns:repeat(auto-fill, minmax(80px, 1fr)); gap:8px;">
+                        </div>
+                        <p class="text-xs mt-2" style="color:#57534E;">Cliquez pour modifier la sélection</p>
+                    </div>
+                </div>
+
+                <input type="file" id="photo-file" name="file" accept=".jpg,.jpeg,.png"
+                       class="hidden" multiple onchange="handleMultiPhotoSelect(this)">
+
+                <!-- Progress bar — hidden until upload starts -->
+                <div id="photo-progress-container" style="display:none;">
+                    <div style="height:5px; background:#1C1917; border-radius:99px; overflow:hidden;">
+                        <div id="photo-progress-bar"
+                             style="height:100%; width:0%; background:#F97316; border-radius:99px; transition:width 0.3s ease;">
+                        </div>
+                    </div>
+                    <p id="photo-progress-text" class="text-xs mt-1" style="color:#78716C;">0 / 0 photos analysées</p>
+                </div>
+
+                <!-- Shared metadata applied to all selected photos -->
                 <div class="flex flex-col gap-1">
                     <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
                         Description courte
-                        <span style="color:#57534E; font-weight:400; text-transform:none;">(optionnel — aide le modèle à mieux analyser)</span>
+                        <span style="color:#57534E; font-weight:400; text-transform:none;">(optionnel — aide le modèle)</span>
                     </label>
-                    <input type="text" name="description"
+                    <input type="text" id="photo-description"
                            placeholder="ex: Coffrage R+2, poteau B12, fissure observée"
                            class="rounded-lg px-3 py-2 text-sm outline-none"
                            style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                 </div>
-
-                <!-- Metadata -->
                 <div class="grid grid-cols-2 gap-3">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Projet</label>
-                        <input type="text" name="projet" placeholder="ex: Résidence Oran"
+                        <input type="text" id="photo-projet" placeholder="ex: Résidence Oran"
                                class="rounded-lg px-3 py-2 text-sm outline-none"
                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Lot technique</label>
-                        <input type="text" name="lot_technique" placeholder="ex: Gros-oeuvre"
+                        <input type="text" id="photo-lot" placeholder="ex: Gros-oeuvre"
                                class="rounded-lg px-3 py-2 text-sm outline-none"
                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                     </div>
                     <div class="flex flex-col gap-1 col-span-2">
                         <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Criticité</label>
-                        <select name="criticite" class="rounded-lg px-3 py-2 text-sm outline-none"
+                        <select id="photo-criticite" class="rounded-lg px-3 py-2 text-sm outline-none"
                                 style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
                             <option value="normale">Normale</option>
                             <option value="haute">Haute</option>
@@ -299,10 +374,10 @@
                     </div>
                 </div>
 
-                <button type="submit"
+                <button type="submit" id="photo-submit-btn"
                         class="rounded-lg px-4 py-3 text-sm font-semibold transition-all hover:opacity-90"
                         style="background:#F97316; color:#1C1917;">
-                    Analyser et indexer la photo
+                    Analyser et indexer les photos
                 </button>
             </form>
         </div>
@@ -311,24 +386,159 @@
 </div>
 
 <script>
-  // Show an inline preview of the selected image inside the drop zone
-  function handlePhotoSelect(input) {
-    const file = input.files[0];
-    if (!file) return;
+  // ── Multi-photo upload ────────────────────────────────────────────────────
 
-    document.getElementById("photo-label-name").textContent = file.name;
-    document.getElementById("photo-label-main").textContent = "Photo sélectionnée";
-    document.getElementById("photo-icon").style.display = "none";
+  function handleMultiPhotoSelect(input) {
+    const files = Array.from(input.files);
+    if (!files.length) return;
 
-    // FileReader reads the file locally in the browser (no upload yet)
-    // and gives us a base64 data URL we can set as the <img> src
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const preview = document.getElementById("photo-preview");
-      preview.src = e.target.result;
-      preview.style.display = "block";
-    };
-    reader.readAsDataURL(file);
+    const grid = document.getElementById("photo-grid");
+    const hint = document.getElementById("photo-drop-hint");
+    const gridContainer = document.getElementById("photo-grid-container");
+    const btn = document.getElementById("photo-submit-btn");
+
+    // Clear any previous thumbnails
+    grid.innerHTML = "";
+
+    files.forEach((file, i) => {
+      // Wrapper with relative positioning so we can overlay a status badge
+      const item = document.createElement("div");
+      item.id = `photo-item-${i}`;
+      item.style.cssText =
+        "position:relative; border-radius:8px; overflow:hidden; aspect-ratio:1/1; background:#1C1917;";
+
+      const img = document.createElement("img");
+      img.style.cssText = "width:100%; height:100%; object-fit:cover; display:block;";
+
+      // Status badge (⏳ / ✅ / ❌) — hidden until upload starts
+      const badge = document.createElement("div");
+      badge.id = `photo-badge-${i}`;
+      badge.style.cssText =
+        "display:none; position:absolute; bottom:4px; right:4px; font-size:14px; line-height:1;";
+
+      // FileReader reads the file locally in the browser and gives a base64 data URL
+      // This is just for the preview — no upload happens here
+      const reader = new FileReader();
+      reader.onload = (e) => { img.src = e.target.result; };
+      reader.readAsDataURL(file);
+
+      item.appendChild(img);
+      item.appendChild(badge);
+      grid.appendChild(item);
+    });
+
+    // Switch from hint to grid view
+    hint.style.display = "none";
+    gridContainer.style.display = "block";
+
+    // Update button label
+    const n = files.length;
+    btn.textContent = `Analyser ${n} photo${n > 1 ? "s" : ""}`;
   }
+
+  async function submitPhotos(event) {
+    event.preventDefault(); // prevent the form from doing a normal page-reload POST
+
+    const input = document.getElementById("photo-file");
+    const files = Array.from(input.files);
+    if (!files.length) return;
+
+    const btn = document.getElementById("photo-submit-btn");
+    const progressContainer = document.getElementById("photo-progress-container");
+    const bar = document.getElementById("photo-progress-bar");
+    const progressText = document.getElementById("photo-progress-text");
+
+    // Collect shared metadata from the form fields
+    const description = document.getElementById("photo-description").value;
+    const projet = document.getElementById("photo-projet").value;
+    const lot = document.getElementById("photo-lot").value;
+    const criticite = document.getElementById("photo-criticite").value;
+
+    btn.disabled = true;
+    progressContainer.style.display = "block";
+
+    let done = 0;
+
+    // Send each photo one by one — await ensures we wait for each response
+    // before moving to the next (sequential, not parallel)
+    for (let i = 0; i < files.length; i++) {
+      const badge = document.getElementById(`photo-badge-${i}`);
+      badge.style.display = "block";
+      badge.textContent = "⏳";
+
+      // Build a FormData object — same as what a regular <form> would send
+      const formData = new FormData();
+      formData.append("file", files[i]);
+      formData.append("description", description);
+      formData.append("projet", projet);
+      formData.append("lot_technique", lot);
+      formData.append("criticite", criticite);
+
+      try {
+        // POST to the JSON API endpoint (not the HTML form route)
+        const res = await fetch("/api/connectors/photo", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        badge.textContent = data.ok ? "✅" : "❌";
+      } catch {
+        badge.textContent = "❌";
+      }
+
+      done++;
+      // Update progress bar width as a percentage
+      bar.style.width = Math.round((done / files.length) * 100) + "%";
+      progressText.textContent = `${done} / ${files.length} photo${files.length > 1 ? "s" : ""} analysée${files.length > 1 ? "s" : ""}`;
+    }
+
+    btn.disabled = false;
+    showToast(`✅ ${done} photo${done > 1 ? "s" : ""} analysée${done > 1 ? "s" : ""} et indexée${done > 1 ? "s" : ""}.`);
+  }
+
+  // ── Email schedules ───────────────────────────────────────────────────────
+
+  async function loadEmailSchedules() {
+    const res = await fetch("/api/email-schedules");
+    const schedules = await res.json();
+    const list = document.getElementById("schedule-list");
+    list.innerHTML = "";
+
+    if (!schedules.length) {
+      list.innerHTML = `<span style="color:#57534E; font-size:12px; padding:4px 0;">Aucun polling actif.</span>`;
+      return;
+    }
+
+    schedules.forEach((s) => {
+      const item = document.createElement("div");
+      item.style.cssText =
+        "display:flex; align-items:center; justify-content:space-between; padding:9px 12px; background:#1C1917; border-radius:8px;";
+
+      item.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:2px;">
+          <span style="color:#F5F5F4; font-size:13px; font-weight:600;">${s.username}</span>
+          <span style="color:#78716C; font-size:11px;">
+            toutes les ${s.interval_hours}h &nbsp;·&nbsp; ${s.projet} &nbsp;·&nbsp; ${s.folder}
+          </span>
+        </div>
+        <button
+          onclick="deleteSchedule(${s.id})"
+          style="background:transparent; border:none; color:#57534E; cursor:pointer; padding:4px 6px; border-radius:5px; font-size:12px;"
+          onmouseenter="this.style.color='#EF4444'"
+          onmouseleave="this.style.color='#57534E'">
+          ✕
+        </button>`;
+
+      list.appendChild(item);
+    });
+  }
+
+  async function deleteSchedule(id) {
+    await fetch(`/api/email-schedules/${id}`, { method: "DELETE" });
+    loadEmailSchedules();
+    showToast("Polling supprimé.", true);
+  }
+
+  document.addEventListener("DOMContentLoaded", loadEmailSchedules);
 </script>
 {% endblock %}
