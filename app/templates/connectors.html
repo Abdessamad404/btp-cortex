@@ -213,6 +213,122 @@
             </form>
         </div>
 
+        <!-- ── Photos de chantier ────────────────────────────────────────────── -->
+        <div class="rounded-xl p-6" style="background:#292524; border:0.5px solid #44403C;">
+
+            <!-- Card header -->
+            <div class="flex items-center gap-3 mb-5">
+                <div style="width:38px; height:38px; background:#1C1917; border-radius:9px;
+                            display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i data-lucide="camera" style="width:18px; height:18px; color:#F97316;"></i>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-sm" style="color:#F5F5F4;">Photos de chantier</h2>
+                    <p class="text-xs" style="color:#78716C;">
+                        Remontées terrain · Constat visuel · Avancement · Anomalies
+                    </p>
+                </div>
+                <span class="ml-auto text-xs px-2 py-1 rounded"
+                      style="background:#1C1917; color:#F97316; border:0.5px solid #F97316;">Vision AI</span>
+            </div>
+
+            <!-- How it works note -->
+            <div class="rounded-lg px-4 py-3 mb-5 text-xs flex gap-2"
+                 style="background:#1C1917; color:#A8A29E; line-height:1.7;">
+                <i data-lucide="sparkles" style="width:14px; height:14px; color:#F97316; flex-shrink:0; margin-top:2px;"></i>
+                <span>
+                    La photo est envoyée à un modèle de vision IA qui génère une description
+                    textuelle détaillée (type de travaux, avancement, anomalies visibles).
+                    Ce texte est ensuite indexé dans la base vectorielle et interrogeable via le chat.
+                </span>
+            </div>
+
+            <!-- Photo form -->
+            <form method="POST" action="/connectors/photo" enctype="multipart/form-data"
+                  class="flex flex-col gap-4">
+
+                <!-- Image drop zone with preview -->
+                <div class="rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 p-6 cursor-pointer"
+                     style="border-color:#44403C; min-height:120px;"
+                     onclick="document.getElementById('photo-file').click()">
+                    <img id="photo-preview"
+                         src=""
+                         alt=""
+                         style="display:none; max-height:160px; border-radius:8px; object-fit:cover; margin-bottom:8px;">
+                    <i data-lucide="image-plus" id="photo-icon" style="width:28px; height:28px; color:#F97316;"></i>
+                    <p class="text-sm" id="photo-label-main" style="color:#F5F5F4;">Cliquez pour choisir une photo</p>
+                    <p class="text-xs" id="photo-label-name" style="color:#F97316;"></p>
+                </div>
+                <input type="file" id="photo-file" name="file" accept=".jpg,.jpeg,.png" class="hidden"
+                       onchange="handlePhotoSelect(this)">
+
+                <!-- Optional context hint -->
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs uppercase tracking-widest" style="color:#78716C;">
+                        Description courte
+                        <span style="color:#57534E; font-weight:400; text-transform:none;">(optionnel — aide le modèle à mieux analyser)</span>
+                    </label>
+                    <input type="text" name="description"
+                           placeholder="ex: Coffrage R+2, poteau B12, fissure observée"
+                           class="rounded-lg px-3 py-2 text-sm outline-none"
+                           style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                </div>
+
+                <!-- Metadata -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Projet</label>
+                        <input type="text" name="projet" placeholder="ex: Résidence Oran"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Lot technique</label>
+                        <input type="text" name="lot_technique" placeholder="ex: Gros-oeuvre"
+                               class="rounded-lg px-3 py-2 text-sm outline-none"
+                               style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                    </div>
+                    <div class="flex flex-col gap-1 col-span-2">
+                        <label class="text-xs uppercase tracking-widest" style="color:#78716C;">Criticité</label>
+                        <select name="criticite" class="rounded-lg px-3 py-2 text-sm outline-none"
+                                style="background:#1C1917; color:#F5F5F4; border:0.5px solid #44403C;">
+                            <option value="normale">Normale</option>
+                            <option value="haute">Haute</option>
+                            <option value="critique">Critique</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="rounded-lg px-4 py-3 text-sm font-semibold transition-all hover:opacity-90"
+                        style="background:#F97316; color:#1C1917;">
+                    Analyser et indexer la photo
+                </button>
+            </form>
+        </div>
+
     </div>
 </div>
+
+<script>
+  // Show an inline preview of the selected image inside the drop zone
+  function handlePhotoSelect(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    document.getElementById("photo-label-name").textContent = file.name;
+    document.getElementById("photo-label-main").textContent = "Photo sélectionnée";
+    document.getElementById("photo-icon").style.display = "none";
+
+    // FileReader reads the file locally in the browser (no upload yet)
+    // and gives us a base64 data URL we can set as the <img> src
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const preview = document.getElementById("photo-preview");
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+</script>
 {% endblock %}
