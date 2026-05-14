@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: batimind
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app --workers 1 --bind 0.0.0.0:$PORT --timeout 120
+    envVars:
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_INDEX
+        sync: false
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: NVIDIA_BASE_URL
+        sync: false
+      - key: LLM_MODEL
+        sync: false
+      - key: FLASK_SECRET_KEY
+        sync: false
+      - key: EMBED_MODEL
+        sync: false

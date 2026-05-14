@@ -13,3 +13,4 @@ openpyxl
 pytesseract
 pillow
 APScheduler
+gunicorn
