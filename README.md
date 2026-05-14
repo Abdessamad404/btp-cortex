@@ -1,5 +1,5 @@
 # BâtiMind 🧠
-> The brain behind BTP data — AI system for centralizing, structuring, and querying construction documents.
+> The brain behind BTP data — AI assistant for centralizing, structuring, and querying construction documents.
 
 ---
 
@@ -11,6 +11,7 @@ It allows you to:
 - **Upload** construction documents (PDFs, Word files, emails, spreadsheets)
 - **Ask questions** in natural language about those documents
 - **Get answers with citations** — the AI tells you which document the answer came from
+- **Connect external sources** — import emails, WhatsApp messages, and field photos directly
 - **Browse a registry** of all indexed documents
 
 Instead of searching manually through hundreds of pages, you ask a question and get a precise, sourced answer in seconds.
@@ -22,13 +23,16 @@ Instead of searching manually through hundreds of pages, you ask a question and 
 | Layer | Tool | Why |
 |---|---|---|
 | Language | Python 3.11+ | Best AI/NLP ecosystem |
-| Orchestration | LangChain | Glues all AI components together |
-| Embeddings | sentence-transformers (`multilingual-MiniLM-L12-v2`) | Free, local, supports FR/AR/EN |
+| Orchestration | LangChain | Text splitting and pipeline glue |
+| Embeddings | NVIDIA NIM (`nvidia/nv-embedqa-e5-v5`) | Free API, 1024-dim, no local model needed |
+| Vision AI | NVIDIA NIM (`meta/llama-3.2-11b-vision-instruct`) | Field photo analysis |
 | Vector DB | Pinecone (free serverless) | Production-grade semantic search |
 | Relational DB | SQLite | Metadata & provenance tracking, zero setup |
-| LLM | `gpt-oss-20b` via NVIDIA NIM | Free API, high-quality answers |
+| LLM | `openai/gpt-oss-20b` via NVIDIA NIM | Free API, high-quality answers |
 | Web Framework | Flask + Jinja2 | Full-stack web app with complete control |
-| Frontend | Bootstrap 5 + vanilla JS | Clean UI, no frontend framework needed |
+| Frontend | Tailwind CSS (CDN) + Lucide Icons | Dark-themed UI, no build step |
+| Scheduler | APScheduler | Background email polling jobs |
+| Deployment | Render.com + Gunicorn | Free tier hosting |
 
 ---
 
@@ -37,36 +41,38 @@ Instead of searching manually through hundreds of pages, you ask a question and 
 ```
 batimind/
 ├── app/
-│   ├── __init__.py           # Flask app factory
-│   ├── database.py           # SQLite connection and schema
+│   ├── __init__.py           # Flask app factory + scheduler init
+│   ├── database.py           # SQLite schema and connection
+│   ├── embedder.py           # NVIDIA NIM embeddings wrapper
+│   ├── chunker.py            # Text splitting (LangChain)
+│   ├── extractors.py         # Text extraction (PDF, DOCX, email, CSV...)
+│   ├── ingestor.py           # Deduplication + extraction orchestration
+│   ├── rag.py                # Full RAG pipeline
+│   ├── vector_store.py       # Pinecone client (upsert + query)
+│   ├── scheduler.py          # APScheduler background jobs
+│   ├── connectors/
+│   │   ├── email_imap.py     # IMAP email fetcher
+│   │   ├── photo.py          # Vision AI photo analyzer
+│   │   └── whatsapp.py       # WhatsApp message parser
 │   ├── routes/
 │   │   ├── upload.py         # POST /upload — file ingestion
 │   │   ├── chat.py           # POST /api/chat — RAG query endpoint
-│   │   └── documents.py      # GET /documents — registry browser
-│   ├── services/
-│   │   ├── extractor.py      # Text extraction (PDF, DOCX, email, CSV...)
-│   │   ├── chunker.py        # Text splitting logic
-│   │   ├── embedder.py       # sentence-transformers wrapper
-│   │   ├── pinecone_db.py    # Pinecone client (upsert + query)
-│   │   ├── sqlite_db.py      # SQLite metadata store
-│   │   └── rag.py            # Full RAG pipeline
+│   │   ├── documents.py      # GET /documents — registry browser
+│   │   ├── conversations.py  # Conversation history API
+│   │   ├── connectors.py     # Connectors UI + API
+│   │   └── home.py           # Landing page
 │   ├── templates/
-│   │   ├── base.html         # Layout with navbar
+│   │   ├── base.html         # Sidebar layout + conversation list
 │   │   ├── index.html        # Landing page
 │   │   ├── upload.html       # Document upload UI
 │   │   ├── chat.html         # Chat interface
-│   │   └── documents.html    # Document registry
+│   │   ├── documents.html    # Document registry
+│   │   └── connectors.html   # Connectors (Email, WhatsApp, Photos)
 │   └── static/
-│       ├── css/style.css
-│       └── js/chat.js        # Async chat (fetch API)
-├── scripts/
-│   └── ingest_knowledge.py   # One-time loader for external knowledge (DTU, normes, CSTB)
-├── data/
-│   ├── uploads/              # Uploaded raw files (gitignored)
-│   ├── knowledge/            # External regulatory sources (gitignored)
-│   └── btp.db                # SQLite database (gitignored)
+│       └── favicon.svg
 ├── config.py                 # All settings in one place
 ├── run.py                    # Flask entry point
+├── render.yaml               # Render.com deployment config
 ├── requirements.txt
 └── .env                      # API keys — NEVER push this
 ```
@@ -78,11 +84,11 @@ batimind/
 ```
 User uploads a document
         ↓
-Text extraction (PyMuPDF / python-docx / OCR)
+Text extraction (PyMuPDF / python-docx / pandas / email)
         ↓
 Text splitting into overlapping chunks (~500 tokens)
         ↓
-Each chunk → embedding vector (384 dimensions)
+Each chunk → embedding vector via NVIDIA NIM (1024 dimensions)
         ↓
 Vectors stored in Pinecone  +  metadata stored in SQLite
         ↓
@@ -97,54 +103,14 @@ LLM answers using only the retrieved context + cites source files
 
 ---
 
-## Setup
+## Technical Highlights
 
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/Abdessamad404/btp-cortex.git
-cd btp-cortex
-```
-
-### 2. Create and activate a virtual environment
-
-```bash
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Create your `.env` file
-
-```
-PINECONE_API_KEY=your_pinecone_key_here
-PINECONE_INDEX=btp-docs
-NVIDIA_API_KEY=your_nvidia_key_here
-NVIDIA_BASE_URL=https://integrate.api.nvidia.com/v1
-LLM_MODEL=openai/gpt-oss-20b
-EMBED_MODEL=paraphrase-multilingual-MiniLM-L12-v2
-FLASK_SECRET_KEY=pick_any_random_string
-```
-
-**Where to get the keys (both free):**
-- **Pinecone** → [pinecone.io](https://pinecone.io) — create a free serverless index named `btp-docs`, dimension `384`, metric `cosine`
-- **NVIDIA NIM** → [build.nvidia.com](https://build.nvidia.com) — sign up and generate an API key
-
-### 5. Run the app
-
-```bash
-python run.py
-```
-
-Open [http://localhost:5000](http://localhost:5000) in your browser.
+- **Full RAG pipeline built from scratch** — no black-box wrappers. Every step from text extraction to vector retrieval is hand-wired and understood.
+- **Zero-cost production stack** — entirely on free tiers (Pinecone, NVIDIA NIM, Render). Proves you don't need a budget to ship real AI.
+- **Multimodal** — handles text documents, structured spreadsheets, emails, and field photos through a Vision LLM.
+- **Background job scheduling** — APScheduler runs email polling in a background thread inside the Flask process, with proper guards for the Werkzeug reloader.
+- **Lazy loading architecture** — all heavy dependencies (Pinecone, LangChain, file parsers) are initialized only on first use, keeping startup RAM well under Render's 512 MB free-tier limit.
+- **Multilingual** — answers questions in French, Arabic, and English using the same pipeline.
 
 ---
 
@@ -153,46 +119,25 @@ Open [http://localhost:5000](http://localhost:5000) in your browser.
 ### Upload documents (`/upload`)
 Supports: `.pdf`, `.docx`, `.txt`, `.eml`, `.csv`, `.xlsx`
 
-- Scanned PDFs are handled with OCR (Tesseract)
 - Deduplication: the same file is never indexed twice
 - Each document is tagged with project, technical lot, author, and criticality
+- Loading spinner while processing
 
 ### Chat with your documents (`/chat`)
 - Ask questions in French, Arabic, or English
 - Answers are grounded — the LLM only uses your documents, never invents
 - Sources are cited in every response
+- Conversation history persisted in SQLite
 
 ### Document registry (`/documents`)
 - Browse all indexed documents
 - See metadata: project, file type, number of chunks, ingestion date
+- Delete documents and remove their vectors from Pinecone
 
----
-
-## External Knowledge Base
-
-In addition to uploaded documents, the system supports loading regulatory references (DTU standards, NF/EN/ISO norms, CSTB guides) as a one-time batch:
-
-```bash
-# Place PDF files in data/knowledge/ then run:
-python scripts/ingest_knowledge.py
-```
-
-These are tagged as `projet: base-reglementaire` and are always searchable alongside your project documents.
-
----
-
-## Roadmap
-
-Phase | Status | Description
----|---|---
-Phase 1 | Done | Project setup, accounts, skeleton
-Phase 2 | Done | Document ingestion pipeline
-Phase 3 | Done | Chunking, embedding, vector storage
-Phase 4 | In progress | RAG query engine
-Phase 5 | Planned | Flask web interface
-Phase 6 | Planned | Testing, demo, polish
-
-**Future integrations (out of scope for prototype):** WhatsApp connector, BIM file support, ERP/CRM integration, GED synchronization.
+### Connectors (`/connectors`) — Beta
+- **Email**: Connect an IMAP mailbox and schedule automatic polling (every N hours)
+- **Photos**: Upload field photos and get AI-generated analysis via Vision LLM
+- **WhatsApp**: Import exported WhatsApp chat files
 
 ---
 
@@ -200,12 +145,24 @@ Phase 6 | Planned | Testing, demo, polish
 
 | Format | Method |
 |---|---|
-| `.pdf` | PyMuPDF (text) or Tesseract OCR (scanned) |
+| `.pdf` | PyMuPDF |
 | `.docx` | python-docx |
 | `.txt` | UTF-8 read |
 | `.eml` | Python `email` library (headers + body) |
-| `.csv` | pandas (stringified rows) |
+| `.csv` | pandas |
 | `.xlsx` | pandas + openpyxl |
+
+---
+
+## Deployment
+
+The app is deployed on [Render.com](https://render.com) free tier using Gunicorn:
+
+```
+gunicorn run:app --workers 1 --bind 0.0.0.0:$PORT --timeout 120
+```
+
+`--workers 1` is required for SQLite + APScheduler compatibility.
 
 ---
 
@@ -213,11 +170,24 @@ Phase 6 | Planned | Testing, demo, polish
 
 **$0** — all tools used are on free tiers:
 - Pinecone: free serverless (up to 2M vectors)
-- NVIDIA NIM: free API credits
-- sentence-transformers: runs locally
+- NVIDIA NIM: free API credits (LLM + embeddings + vision)
 - SQLite: built into Python
 - Flask: open source
+- Render.com: free web service tier
 
 ---
 
-*Built by [Abdessamad](https://github.com/Abdessamad404) as a BTP AI prototype.*
+## Roadmap
+
+| Phase | Status | Description |
+|---|---|---|
+| Phase 1 | ✅ Done | Project setup, accounts, skeleton |
+| Phase 2 | ✅ Done | Document ingestion pipeline |
+| Phase 3 | ✅ Done | Chunking, embedding, vector storage |
+| Phase 4 | ✅ Done | RAG query engine |
+| Phase 5 | ✅ Done | Flask web application |
+| Phase 6 | 🔄 In progress | Connectors, deployment, polish |
+
+---
+
+*Built by [Abdessamad](https://github.com/Abdessamad404) — BTP AI prototype.*
