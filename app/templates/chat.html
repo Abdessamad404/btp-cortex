@@ -1,64 +1,77 @@
-{% extends "base.html" %}
-{% block content %}
-    <div id="chat-container"
-         class="flex flex-col mx-auto"
-         style="max-width: 900px;
-                height: calc(100vh - 80px);
-                overflow-x: hidden">
-        <!-- Centered empty state (shown when no messages) -->
-        <div id="empty-state"
-             class="flex flex-col items-center justify-center flex-1 gap-6">
-            <div class="text-center">
-                <h1 class="text-2xl font-medium mb-2" style="color: #f5f5f4">Que voulez-vous savoir ?</h1>
-                <p class="text-sm" style="color: #78716c">Posez une question sur vos documents BTP indexés.</p>
-            </div>
-            <!-- Input centered -->
-            <div class="rounded-xl flex items-center gap-3 px-4 py-3 w-full"
-                 style="background: #292524;
-                        border: 0.5px solid #44403c">
-                <input id="question"
-                       type="text"
-                       placeholder="Ex: Quelle est la résistance du béton pour les fondations ?"
-                       class="flex-1 bg-transparent text-sm outline-none"
-                       style="color: #f5f5f4"
-                       autocomplete="off" />
-                <button id="send-btn"
-                        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
-                        style="background: #f97316;
-                               color: #1c1917;
-                               flex-shrink: 0">
-                    <i data-lucide="send" style="width: 14px; height: 14px"></i>
-                    Envoyer
-                </button>
-            </div>
-        </div>
-        <!-- Chat view (hidden until first message) -->
-        <div id="chat-view" class="flex-col hidden" style="height: 100%">
-            <!-- Messages -->
-            <div id="chat-box"
-                 class="flex-1 overflow-y-auto flex flex-col gap-4 py-4 pr-1"></div>
-            <!-- Input at bottom -->
-            <div class="rounded-xl flex items-center gap-3 px-4 py-3 mb-2"
-                 style="background: #292524;
-                        border: 0.5px solid #44403c">
-                <input id="question2"
-                       type="text"
-                       placeholder="Continuez la conversation..."
-                       class="flex-1 bg-transparent text-sm outline-none"
-                       style="color: #f5f5f4"
-                       autocomplete="off" />
-                <button id="send-btn2"
-                        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
-                        style="background: #f97316;
-                               color: #1c1917;
-                               flex-shrink: 0">
-                    <i data-lucide="send" style="width: 14px; height: 14px"></i>
-                    Envoyer
-                </button>
-            </div>
-        </div>
+{% extends "base.html" %} {% block content %}
+<div
+  id="chat-container"
+  class="flex flex-col mx-auto"
+  style="max-width: 900px; height: calc(100vh - 80px); overflow-x: hidden"
+>
+  <!-- Centered empty state (shown when no messages) -->
+  <div
+    id="empty-state"
+    class="flex flex-col items-center justify-center flex-1 gap-6"
+  >
+    <div class="text-center">
+      <h1 class="text-2xl font-medium mb-2" style="color: #f5f5f4">
+        Que voulez-vous savoir ?
+      </h1>
+      <p class="text-sm" style="color: #78716c">
+        Posez une question sur vos documents BTP indexés.
+      </p>
     </div>
-    <style>
+    <!-- Input centered -->
+    <div
+      class="rounded-xl flex items-center gap-3 px-4 py-3 w-full"
+      style="background: #292524; border: 0.5px solid #44403c"
+    >
+      <input
+        id="question"
+        type="text"
+        placeholder="Ex: Quelle est la résistance du béton pour les fondations ?"
+        class="flex-1 bg-transparent text-sm outline-none"
+        style="color: #f5f5f4"
+        autocomplete="off"
+      />
+      <button
+        id="send-btn"
+        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+        style="background: #f97316; color: #1c1917; flex-shrink: 0"
+      >
+        <i data-lucide="send" style="width: 14px; height: 14px"></i>
+        Envoyer
+      </button>
+    </div>
+  </div>
+  <!-- Chat view (hidden until first message) -->
+  <div id="chat-view" class="flex-col hidden" style="height: 100%">
+    <!-- Messages -->
+    <div
+      id="chat-box"
+      class="flex-1 overflow-y-auto flex flex-col gap-4 py-4 pr-1"
+    ></div>
+    <!-- Input at bottom -->
+    <div
+      class="rounded-xl flex items-center gap-3 px-4 py-3 mb-2"
+      style="background: #292524; border: 0.5px solid #44403c"
+    >
+      <input
+        id="question2"
+        type="text"
+        placeholder="Continuez la conversation..."
+        class="flex-1 bg-transparent text-sm outline-none"
+        style="color: #f5f5f4"
+        autocomplete="off"
+      />
+      <button
+        id="send-btn2"
+        class="rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 transition-all hover:opacity-90"
+        style="background: #f97316; color: #1c1917; flex-shrink: 0"
+      >
+        <i data-lucide="send" style="width: 14px; height: 14px"></i>
+        Envoyer
+      </button>
+    </div>
+  </div>
+</div>
+<style>
   #chat-box::-webkit-scrollbar {
     width: 4px;
   }
@@ -94,13 +107,14 @@
   #chat-box .bot-bubble {
     overflow-x: auto;
   }
-    </style>
-    <script>
+</style>
+<script>
   const emptyState = document.getElementById("empty-state");
   const chatView = document.getElementById("chat-view");
   const chatBox = document.getElementById("chat-box");
 
   let conversationId = null; // holds the active conversation id
+  let isFirstMessage = false; // tracks if the first message has been sent
 
   // Load an existing conversation if ?conv=id is in the URL
   async function loadConversation() {
@@ -162,6 +176,7 @@
       const conv = await fetch("/api/conversations", { method: "POST" });
       const convData = await conv.json();
       conversationId = convData.id;
+      isFirstMessage = true;
     }
 
     appendMessage("user", question);
@@ -183,6 +198,18 @@
         reply += `\n\n📎 Sources : ${data.sources.join(", ")}`;
       }
       appendMessage("bot", reply);
+
+      // Auto-title the conversation from the first user message
+      if (isFirstMessage) {
+        const title =
+          question.length > 40 ? question.substring(0, 40) + "…" : question;
+        fetch(`/api/conversations/${conversationId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title }),
+        }).then(() => loadConversations());
+        isFirstMessage = false;
+      }
     } catch (err) {
       removeTyping(typingId);
       appendMessage("bot", "Erreur de connexion. Réessayez.");
@@ -241,5 +268,5 @@
     const el = document.getElementById(id);
     if (el) el.remove();
   }
-    </script>
+</script>
 {% endblock %}
