@@ -1,11 +1,9 @@
-import fitz  # pymupdf
-from docx import Document
-import pandas as pd
 import email as email_lib
 import os
 
 
 def extract_pdf(filepath):
+    import fitz
     text = ""
     with fitz.open(filepath) as doc:
         for page in doc:
@@ -14,6 +12,7 @@ def extract_pdf(filepath):
 
 
 def extract_docx(filepath):
+    from docx import Document
     doc = Document(filepath)
     text = "\n".join([para.text for para in doc.paragraphs])
     return text.strip()
@@ -41,11 +40,13 @@ def extract_eml(filepath):
 
 
 def extract_csv(filepath):
-    df = pd.read_csv(filepath)  # DataFrame
+    import pandas as pd
+    df = pd.read_csv(filepath)
     return df.to_string(index=False)
 
 
 def extract_xlsx(filepath):
+    import pandas as pd
     df = pd.read_excel(filepath)
     return df.to_string(index=False)
 

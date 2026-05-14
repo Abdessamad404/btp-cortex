@@ -1,12 +1,19 @@
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from config import CHUNK_SIZE, CHUNK_OVERLAP
 
-splitter = RecursiveCharacterTextSplitter(
-    chunk_size=CHUNK_SIZE,
-    chunk_overlap=CHUNK_OVERLAP,
-    separators=["\n\n", "\n", ".", " ", ""],
-)
+_splitter = None
+
+
+def _get_splitter():
+    global _splitter
+    if _splitter is None:
+        from langchain_text_splitters import RecursiveCharacterTextSplitter
+        _splitter = RecursiveCharacterTextSplitter(
+            chunk_size=CHUNK_SIZE,
+            chunk_overlap=CHUNK_OVERLAP,
+            separators=["\n\n", "\n", ".", " ", ""],
+        )
+    return _splitter
 
 
 def chunk(text: str) -> list[str]:
-    return splitter.split_text(text)
+    return _get_splitter().split_text(text)

@@ -1,11 +1,16 @@
-from openai import OpenAI
 from app.embedder import embed
 from app.vector_store import search
 from config import NVIDIA_API_KEY, NVIDIA_BASE_URL, LLM_MODEL, TOP_K
 
-# Connect to NVIDIA NIM using the OpenAI-compatible client
-# Same client as OpenAI, just pointed at a different base URL
-client = OpenAI(api_key=NVIDIA_API_KEY, base_url=NVIDIA_BASE_URL)
+_client = None
+
+
+def _get_client():
+    global _client
+    if _client is None:
+        from openai import OpenAI
+        _client = OpenAI(api_key=NVIDIA_API_KEY, base_url=NVIDIA_BASE_URL)
+    return _client
 
 
 def ask(question: str, projet: str = None) -> dict:
@@ -23,7 +28,7 @@ def ask(question: str, projet: str = None) -> dict:
         }
 
     # Step 1 — embed the question into a vector
-    question_vector = embed([question])[0]
+    question_vector = embed([question], input_type="query")[0]
 
     # Step 2 — find the most relevant chunks in Pinecone
     filter = {"projet": projet} if projet else None
@@ -54,7 +59,7 @@ def ask(question: str, projet: str = None) -> dict:
     Réponse:"""
 
     # Step 5 — call the LLM
-    response = client.chat.completions.create(
+    response = _get_client().chat.completions.create(
         model=LLM_MODEL,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,  # low temperature = more factual, less creative
