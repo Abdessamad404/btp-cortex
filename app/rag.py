@@ -62,7 +62,20 @@ def ask(question: str, projet: str = None) -> dict:
     )
     answer = response.choices[0].message.content
 
-    # Step 6 — extract unique source filenames
-    sources = list({c.get("filename", "inconnu") for c in chunks})
+    # Only show sources if the LLM actually used them to answer
+    no_answer_phrases = [
+        "je ne trouve",
+        "aucune information",
+        "ne se trouve pas",
+        "pas de réponse",
+        "contexte ne contient",
+        "ne contient pas",
+        "ne mentionne pas",
+    ]
+    answer_lower = answer.lower()
+    used_sources = not any(phrase in answer_lower for phrase in no_answer_phrases)
+    sources = (
+        list({c.get("filename", "inconnu") for c in chunks}) if used_sources else []
+    )
 
     return {"answer": answer, "sources": sources}
