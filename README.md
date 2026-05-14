@@ -1,11 +1,11 @@
-# btp-cortex 🧠
+# BâtiMind 🧠
 > The brain behind BTP data — AI system for centralizing, structuring, and querying construction documents.
 
 ---
 
 ## What is this project?
 
-BTP Cortex is a **RAG (Retrieval-Augmented Generation)** application built for the construction industry (BTP = Bâtiment et Travaux Publics).
+BâtiMind is a **RAG (Retrieval-Augmented Generation)** application built for the construction industry (BTP = Bâtiment et Travaux Publics).
 
 It allows you to:
 - **Upload** construction documents (PDFs, Word files, emails, spreadsheets)
@@ -35,7 +35,7 @@ Instead of searching manually through hundreds of pages, you ask a question and 
 ## Project Structure
 
 ```
-btp-cortex/
+batimind/
 ├── app/
 │   ├── __init__.py           # Flask app factory
 │   ├── database.py           # SQLite connection and schema
