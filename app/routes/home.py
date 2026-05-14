@@ -1,7 +1,12 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify
 from app.database import get_connection
 
 home_bp = Blueprint("home", __name__)
+
+
+@home_bp.route("/ping")
+def ping():
+    return jsonify({"status": "ok"}), 200
 
 
 @home_bp.route("/")
