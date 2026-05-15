@@ -1,7 +1,7 @@
 # BâtiMind 🧠
 > The brain behind BTP data — AI assistant for centralizing and querying construction documents.
 
-**Live demo → [batimind.onrender.com](https://batimind.onrender.com)**
+<!-- **Live demo → [batimind.onrender.com](https://batimind.onrender.com)** -->
 
 ---
 
@@ -13,7 +13,7 @@ No more searching manually through hundreds of pages.
 
 ---
 
-## Tech Stack
+<!-- ## Tech Stack
 
 | Layer | Tool |
 |---|---|
@@ -27,7 +27,7 @@ No more searching manually through hundreds of pages.
 | Frontend | Tailwind CSS + Lucide Icons |
 | Deployment | Render.com + Gunicorn |
 
----
+--- -->
 
 ## Features
 
