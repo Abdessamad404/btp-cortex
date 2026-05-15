@@ -45,7 +45,7 @@ def ask(question: str, projet: str = None) -> dict:
     # Step 4 — build the prompt
     prompt = f"""Tu es un assistant expert en projets BTP (Bâtiment et Travaux Publics).
     Réponds à la question en utilisant UNIQUEMENT le contexte fourni ci-dessous.
-    Si la réponse ne se trouve pas dans le contexte, commence ta réponse OBLIGATOIREMENT par [INSUFFISANT] puis explique que l'information n'est pas disponible dans les documents — ne invente rien.
+    Si le contexte ne contient AUCUNE information pertinente pour répondre à la question, commence ta réponse OBLIGATOIREMENT par [INSUFFISANT]. Sinon, réponds avec ce que tu as, même si c'est partiel — ne invente rien.
     Cite toujours le(s) document(s) source(s) que tu as utilisé(s).
 
     Contexte:
@@ -66,8 +66,9 @@ def ask(question: str, projet: str = None) -> dict:
 
     # Only show sources if the LLM actually used them to answer
     used_sources = not answer.strip().startswith("[INSUFFISANT]")
+    clean_answer = answer.strip().removeprefix("[INSUFFISANT]").strip()
     sources = (
         list({c.get("filename", "inconnu") for c in chunks}) if used_sources else []
     )
 
-    return {"answer": answer, "sources": sources}
+    return {"answer": clean_answer, "sources": sources}

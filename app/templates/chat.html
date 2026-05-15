@@ -193,11 +193,8 @@
       const data = await res.json();
       removeTyping(typingId);
 
-      let reply = data.answer || data.error;
-      if (data.sources?.length) {
-        reply += `\n\n📎 Sources : ${data.sources.join(", ")}`;
-      }
-      appendMessage("bot", reply);
+      const reply = data.answer || data.error;
+      appendMessage("bot", reply, data.sources || []);
 
       // Auto-title the conversation from the first user message
       if (isFirstMessage) {
@@ -218,7 +215,7 @@
     document.getElementById("question2").focus();
   }
 
-  function appendMessage(role, text) {
+  function appendMessage(role, text, sources = []) {
     const isUser = role === "user";
     const row = document.createElement("div");
     row.style.cssText =
@@ -231,7 +228,7 @@
 
     const bubble = `
       <div class="${isUser ? "" : "bot-bubble"}" style="max-width:75%; background:${isUser ? "#F97316" : "#292524"}; color:${isUser ? "#1C1917" : "#F5F5F4"}; border:0.5px solid ${isUser ? "#F97316" : "#44403C"}; border-radius:12px; ${isUser ? "border-top-right-radius:2px;" : "border-top-left-radius:2px;"} padding:10px 14px; font-size:14px; line-height:1.6; word-wrap:break-word;">
-                  ${isUser ? text : marked.parse(text)}
+        ${isUser ? text : marked.parse(text)}
       </div>`;
 
     if (isUser) {
