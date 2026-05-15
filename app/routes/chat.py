@@ -26,13 +26,11 @@ def api_chat():
     if not question:
         return jsonify({"error": "Question vide."}), 400
 
-    last_error = None
     for attempt in range(3):
         try:
             result = ask(question, projet=projet)
             break
-        except Exception as e:
-            last_error = e
+        except Exception:
             time.sleep(1)
     else:
         return jsonify({"answer": "Le service est temporairement indisponible. Réessayez dans quelques secondes.", "sources": []}), 200
