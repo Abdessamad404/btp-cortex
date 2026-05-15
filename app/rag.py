@@ -1,15 +1,12 @@
+from openai import OpenAI
 from app.embedder import embed
 from app.vector_store import search
 from config import NVIDIA_API_KEY, NVIDIA_BASE_URL, LLM_MODEL, TOP_K
 
-_client = None
+_client = OpenAI(api_key=NVIDIA_API_KEY, base_url=NVIDIA_BASE_URL)
 
 
 def _get_client():
-    global _client
-    if _client is None:
-        from openai import OpenAI
-        _client = OpenAI(api_key=NVIDIA_API_KEY, base_url=NVIDIA_BASE_URL)
     return _client
 
 
@@ -48,14 +45,14 @@ def ask(question: str, projet: str = None) -> dict:
     # Step 4 — build the prompt
     prompt = f"""Tu es un assistant expert en projets BTP (Bâtiment et Travaux Publics).
     Réponds à la question en utilisant UNIQUEMENT le contexte fourni ci-dessous.
-    Si la réponse ne se trouve pas dans le contexte, dis-le clairement — ne invente rien.
+    Si la réponse ne se trouve pas dans le contexte, commence ta réponse OBLIGATOIREMENT par [INSUFFISANT] puis explique que l'information n'est pas disponible dans les documents — ne invente rien.
     Cite toujours le(s) document(s) source(s) que tu as utilisé(s).
-    
+
     Contexte:
     {context}
-    
+
     Question: {question}
-    
+
     Réponse:"""
 
     # Step 5 — call the LLM
@@ -68,17 +65,7 @@ def ask(question: str, projet: str = None) -> dict:
     answer = response.choices[0].message.content
 
     # Only show sources if the LLM actually used them to answer
-    no_answer_phrases = [
-        "je ne trouve",
-        "aucune information",
-        "ne se trouve pas",
-        "pas de réponse",
-        "contexte ne contient",
-        "ne contient pas",
-        "ne mentionne pas",
-    ]
-    answer_lower = answer.lower()
-    used_sources = not any(phrase in answer_lower for phrase in no_answer_phrases)
+    used_sources = not answer.strip().startswith("[INSUFFISANT]")
     sources = (
         list({c.get("filename", "inconnu") for c in chunks}) if used_sources else []
     )

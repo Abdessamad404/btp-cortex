@@ -1,14 +1,11 @@
+from pinecone import Pinecone
 from config import PINECONE_API_KEY, PINECONE_INDEX
 import uuid
 
-_index = None
+_index = Pinecone(api_key=PINECONE_API_KEY).Index(PINECONE_INDEX)
 
 
 def _get_index():
-    global _index
-    if _index is None:
-        from pinecone import Pinecone
-        _index = Pinecone(api_key=PINECONE_API_KEY).Index(PINECONE_INDEX)
     return _index
 
 

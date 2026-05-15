@@ -1,18 +1,11 @@
+from openai import OpenAI
 from config import NVIDIA_API_KEY, NVIDIA_BASE_URL, EMBED_MODEL
 
-_client = None
-
-
-def _get_client():
-    global _client
-    if _client is None:
-        from openai import OpenAI
-        _client = OpenAI(api_key=NVIDIA_API_KEY, base_url=NVIDIA_BASE_URL)
-    return _client
+_client = OpenAI(api_key=NVIDIA_API_KEY, base_url=NVIDIA_BASE_URL)
 
 
 def embed(texts: list[str], input_type: str = "passage") -> list[list[float]]:
-    response = _get_client().embeddings.create(
+    response = _client.embeddings.create(
         input=texts,
         model=EMBED_MODEL,
         encoding_format="float",
