@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, jsonify
 from app.rag import ask
 from app.database import get_connection
+import time
 
 chat_bp = Blueprint("chat", __name__)
 
@@ -25,7 +26,16 @@ def api_chat():
     if not question:
         return jsonify({"error": "Question vide."}), 400
 
-    result = ask(question, projet=projet)
+    last_error = None
+    for attempt in range(3):
+        try:
+            result = ask(question, projet=projet)
+            break
+        except Exception as e:
+            last_error = e
+            time.sleep(1)
+    else:
+        return jsonify({"answer": "Le service est temporairement indisponible. Réessayez dans quelques secondes.", "sources": []}), 200
 
     # Save messages to DB if a conversation is active
     if conversation_id:
