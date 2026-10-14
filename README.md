@@ -3,7 +3,7 @@
 
 <!-- **Live demo → [batimind.onrender.com](https://batimind.onrender.com)** -->
 
-**Démo enregistrée → [Voir l'application en action](https://drive.google.com/file/d/15v_MC6yixmZ0lJxQKb8VskVmdCbTGNWM/view)**
+**Recorded demo → [Watch the app in action](https://drive.google.com/file/d/15v_MC6yixmZ0lJxQKb8VskVmdCbTGNWM/view)**
 
 ---
 
@@ -15,7 +15,7 @@ No more searching manually through hundreds of pages.
 
 ---
 
-<!-- ## Tech Stack
+## Tech Stack
 
 | Layer | Tool |
 |---|---|
@@ -29,7 +29,7 @@ No more searching manually through hundreds of pages.
 | Frontend | Tailwind CSS + Lucide Icons |
 | Deployment | Render.com + Gunicorn |
 
---- -->
+---
 
 ## Features
 
@@ -64,5 +64,13 @@ En effet, lors du processus d'ingestion de documents, l'application charge simul
 Le tout dépasse largement les 512 MB disponibles, provoquant des crashs lors de l'ingestion de documents.
 
 ---
+
+## Run locally
+
+```bash
+pip install -r requirements.txt
+cp .env.example .env   # add your NVIDIA NIM + Pinecone keys
+python run.py
+```
 
 *Built by [Abdessamad](https://github.com/Abdessamad404)*
