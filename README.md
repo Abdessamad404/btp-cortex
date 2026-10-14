@@ -51,20 +51,6 @@ No more searching manually through hundreds of pages.
 
 ---
 
-## Déploiement & Limitations
-
-L'application est déployée sur Render (free tier).
-
-Cependant, le free tier de Render limite la mémoire RAM à 512 MB — ce qui s'avère insuffisant pour BâtiMind.
-
-En effet, lors du processus d'ingestion de documents, l'application charge simultanément plusieurs composants lourds : le modèle d'embedding NVIDIA NIM, le client Pinecone, le pipeline LangChain et le serveur Flask via Gunicorn.
-
-À cela s'ajoutent les dépendances Python (PyMuPDF, pandas, torch, etc.) qui occupent elles-mêmes une part significative de la mémoire.
-
-Le tout dépasse largement les 512 MB disponibles, provoquant des crashs lors de l'ingestion de documents.
-
----
-
 ## Run locally
 
 ```bash
